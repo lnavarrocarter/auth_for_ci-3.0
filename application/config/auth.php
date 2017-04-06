@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | -------------------------------------------------------------------
 | Configuración de Funcionamiento
 | -------------------------------------------------------------------
-| Este arhivo contiene la configuración del sistema de login de NCAI.
+| Este arhivo contiene la configuración Ncai Auth for CI.
 |
 | Puedes modificar el comportamiento del sistema de login en este
 | archivo, tanto las direcciones de redireccionamiento, como activar
@@ -37,9 +37,9 @@ $config['activate_registration'] = true;
 $config['register_with_name'] = false;
 $config['register_with_username'] = false;
 $config['register_with_terms'] = false;
-$config['activation_email'] = true; // Eńvía un email de confirmación para el registro.
-$config['default_permissions'] = USER; // Puedes elegir entre USER, ADMIN o SADMIN.
-$config['send_welcome_email'] = false; // Depende de activation email.
+$config['activation_email'] = true;     // Eńvía un email de confirmación para el registro.
+$config['default_permissions'] = USER;  // Puedes elegir entre USER, ADMIN o SADMIN.
+$config['send_welcome_email'] = false;  // Depende de activation email.
 
 // Opciones de Seguridad
 $config['use_salt'] = true;
@@ -94,7 +94,7 @@ $config['email_activation_button_text'] = 'Activar Cuenta';
 
 
 // Texto Email Bienvenida
-$config['email_welcome_subject'] = 'Activación de Cuenta';
+$config['email_welcome_subject'] = 'Bienvenido';
 $config['email_welcome_title'] = '';
 $config['email_welcome_paragraphs'] = [
     'p1' => '',

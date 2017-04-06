@@ -1,12 +1,14 @@
 /system/*
 /.phpintel/*
 .htaccess
+index.php
 *.sublime*
 /application/hooks/*
 /application/config/*
 !auth.php
 !autoload.php
 !migrations.php
+!constants.php
 !database.php
 !email.php
 !migration.php
