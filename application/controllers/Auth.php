@@ -310,11 +310,9 @@ class Auth extends CI_Controller {
                     $this->session->set_flashdata('error', 'Hubo algunos problemas con tu formulario: '.validation_errors());
                     redirect('auth/register');
                 // Verificar si tiene activado login por términos
-                } elseif ($this->config->item('register_with_terms')) {
-                    if (!$this->input->post('terms')) {
-                        $this->session->set_flashdata('error', 'Debes aceptar los términos de servicio.');
-                        redirect('auth/register');
-                    }
+                } elseif ($this->config->item('register_with_terms') && !$this->input->post('terms')) {
+                    $this->session->set_flashdata('error', 'Debes aceptar los términos de servicio.');
+                    redirect('auth/register');
                 // SI es válido, comienzo a construir los datos.
                 } else {
                     // Salteo y hasheo de password.
