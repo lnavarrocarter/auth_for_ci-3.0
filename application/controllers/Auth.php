@@ -33,9 +33,6 @@ class Auth extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        // Carga la libería de sesión
-        $this->load->library('session');
-
         // Chequeo de Requerimientos
         $errormsg = NULL;
         // Compara las versiones de PHP
@@ -53,12 +50,6 @@ class Auth extends CI_Controller {
         if ($errormsg) {
             $this->session->set_flashdata('error', $errormsg);
         }
-        // Carga las librerías requeridas
-        // Puedes sacarlas de aquí y colocarlas en el autoload
-        $this->load->database();
-        $this->load->library('form_validation');
-        $this->load->library('middleware');
-        $this->load->helper('url');
         // Cargar Modelos
         $this->load->model('User');
         $this->load->model('LoginAttempt');
