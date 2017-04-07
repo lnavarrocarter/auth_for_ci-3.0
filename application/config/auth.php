@@ -29,7 +29,7 @@ $config['activate_registration'] = true;    // Activar el registro de usuarios
 $config['register_with_name'] = false;      // Pedir el nombre en el registro
 $config['register_with_username'] = false;  // Pedir un nombre de usuario en el registro
 $config['register_with_terms'] = false;     // Pedir aceptar los términos de servicio en el registro
-$config['activation_email'] = true;         // Eńvía un email de confirmación para el registro.
+$config['activation_email'] = false;         // Eńvía un email de confirmación para el registro.
 $config['default_permissions'] = USER;      // Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
 $config['send_welcome_email'] = false;      // Depende de activation email.
 

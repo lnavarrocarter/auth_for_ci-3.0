@@ -149,9 +149,9 @@ class Auth extends CI_Controller {
                     // Se hashea el password.
                     } else {
                         if ($this->config->item('use_salt')) {
-                            $hash = sha1($query->salt.$this->input->post('passwd'));
+                            $pass = $query->salt.$this->input->post('passwd');
                         } else {
-                            $hash = sha1($this->input->post('passwd'));
+                            $pass = $this->input->post('passwd');
                         }
                         // Chequea si el usuario está activo.
                         if (!$query->is_active) {                            
@@ -172,7 +172,7 @@ class Auth extends CI_Controller {
                             }                        
                         } 
                         // Chequea el password
-                        if ($hash !== $query->password) {
+                        if (password_verify($pass, $query->password)) {
                             // Si la función está activada, guarda el intento fallido del usuario.
                             if ($this->config->item('save_failed_attempt')) {
                                 $this->failed_attempt($query->id);
@@ -320,9 +320,9 @@ class Auth extends CI_Controller {
                     // Salteo y hasheo de password.
                     if ($this->config->item('use_salt')) {
                         $data['salt'] = uniqid(mt_rand(), true);
-                        $data['password'] = sha1($data['salt'].$this->input->post('passwd'));
+                        $data['password'] = password_hash($data['salt'].$this->input->post('passwd'), PASSWORD_BCRYPT);
                     } else {
-                        $data['password'] = sha1($this->input->post('passwd'));
+                        $data['password'] = password_hash($this->input->post('passwd'), PASSWORD_BCRYPT);
                     }
                     // Poner los permisos por defecto
                     $data['permissions'] = $this->config->item('default_permissions');
@@ -488,9 +488,9 @@ class Auth extends CI_Controller {
                         // Luego, se encripta la contraseña si se usa salt o no.
                         if ($this->config->item('use_salt')) {
                             $data['salt'] = uniqid(mt_rand(), true);
-                            $data['password'] = sha1($data['salt'].$this->input->post('passwd'));
+                            $data['password'] = password_hash($data['salt'].$this->input->post('passwd'), PASSWORD_BCRYPT);
                         } else {
-                            $data['password'] = sha1($this->input->post('passwd'));
+                            $data['password'] = password_hash($this->input->post('passwd'), PASSWORD_BCRYPT);
                         }
                         $data['forgotten_password_code'] = NULL;
                         $query = $this->User->update('users', $data, ['id' => $user->id]);
