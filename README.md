@@ -19,6 +19,42 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 
 8. **Ultra personalizable:** Define el color de tus emails, las redes sociales, el texto, tu logo y todo lo demás simplemente utilizando el archivo de configuración. El constructor de correo lo hará todo por ti y hará tus correos lucir profesionales.
 
-## Documentación
+## Instalación y Configuración
+Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
-### Instalación
+1. Descargar la [última versión](https://github.com/mnavarrocarter/ncai_auth_for_ci/releases/latest)
+
+2. Extraer el contenido en el directorio raíz de tu Codeigniter
+
+3. Crea tu base de datos.
+
+4. En tu config/database.php escribe las credenciales de tu base de datos.
+
+5. En config/auth.php define las funciones a utilizar, configura tus correos y todo lo que necesitas.
+
+6. En config/routes.php escribe 'auth' como la ruta por defecto.
+
+7. Ejecútalo, y disfruta la magia!
+
+>NOTA: Ten en cuenta que Ncai Auth sobreescribirá la configuración que tengas en tus archivos de autoload.php, database.php, constants.php, email.php y migration.php. Es recomendable siempre instalarlo en una instancia fresca de Codeigniter. Si lo estás instalando en una instancia que ya posee configuraciones definidas en esos archivos, asegúrate de guardarlas o reconfigurarlas.
+
+## Funcionalidades en Desarrollo
+
+1. Crear un archivo de log para registrar cierta actividad.
+
+2. Guardar varios intentos fallidos de violación CSRF y quizás bloquear la ip. Mandar un correo al admin.
+
+3. Crear el controlador de Users, con vistas para administrar.
+
+4. Integración con AdminLTE
+
+5. Para sistemas de login que requieren una subscripción, agregar campo para plan y funciones para validar subscripción.
+
+6. Campo para URL de foto de Perfil.
+
+7. Librería para CronJobs, como recordatorios para el usuario y eliminación de tokens.
+
+## Contribuir
+1. Puedes [reportar un bug o sugerir una mejora](https://github.com/mnavarrocarter/ncai_auth_for_ci/issues).
+
+2. Puedes [realizar pull requests](https://github.com/mnavarrocarter/ncai_auth_for_ci/pulls) con mejoras y nuevas funcionalidades que desees incluir en la plataforma.
