@@ -56,6 +56,8 @@ Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
 8. Confirmación de password para acciones sensibles de seguridad, bajo `auth/confirm`.
 
+9. Integración con AJAX.
+
 ## Específicos
 
 ### Sobre el Sistema de Permisos
@@ -68,7 +70,7 @@ defined('USER')     OR define('USER', 1);       // User
 defined('ADMIN')    OR define('ADMIN', 2);      // Admin
 defined('SADMIN')   OR define('SADMIN', 4);     // Super Admin
 ```
-Para agregar más permisos, simplemente debemos preocuparnos que el número que le sigue está multiplicado por dos. Además, puedes reescribir el sistema de acuerdo a la necesidad de tu aplicación. Por ejemplo:
+Para agregar más permisos, simplemente debemos preocuparnos que el número que sigue multiplique por dos al anterior. Además, puedes reescribir el sistema de acuerdo a la necesidad de tu aplicación. Por ejemplo:
 ```
 defined('CREATE_USER')     OR define('CREATE_USER', 1);
 defined('DELETE_USER')    OR define('DELETE_USER', 2);
