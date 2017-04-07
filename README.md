@@ -40,7 +40,7 @@ Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
 ## Funcionalidades en Desarrollo
 
-1. Crear un archivo de log para registrar cierta actividad.
+1. Crear una librería para registrar entradas de log para ciertas actividades.
 
 2. Guardar varios intentos fallidos de violación CSRF y quizás bloquear la ip. Mandar un correo al admin.
 
