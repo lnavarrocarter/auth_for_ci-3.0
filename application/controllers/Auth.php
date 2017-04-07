@@ -172,13 +172,13 @@ class Auth extends CI_Controller {
                             }                        
                         } 
                         // Chequea el password
-                        if (password_verify($pass, $query->password)) {
+                        if (!password_verify($pass, $query->password)) {
                             // Si la función está activada, guarda el intento fallido del usuario.
                             if ($this->config->item('save_failed_attempt')) {
                                 $this->failed_attempt($query->id);
                             }
                             // Chequea si el bloqueo por intentos fallidos está activo
-                            if ($this->config->item('attempts_to_block') > 0) {
+                            if ($this->config->item('attempts_to_block') > 0 && $this->config->item('save_failed_attempt')) {
                                 // Chequea si el usuario ha tenido múltiples intentos de inicio fallidos
                                 $left = $this->check_failed_attempts($query->id);
                                 if (!$left) {
