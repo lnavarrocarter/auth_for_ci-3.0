@@ -29,7 +29,7 @@ $config['activate_registration'] = true;    // Activar el registro de usuarios
 $config['register_with_name'] = false;      // Pedir el nombre en el registro
 $config['register_with_username'] = false;  // Pedir un nombre de usuario en el registro
 $config['register_with_terms'] = false;     // Pedir aceptar los términos de servicio en el registro
-$config['activation_email'] = false;         // Eńvía un email de confirmación para el registro.
+$config['activation_email'] = false;        // Envía un email de confirmación para el registro.
 $config['default_permissions'] = USER;      // Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
 $config['send_welcome_email'] = false;      // Depende de activation email.
 
@@ -41,7 +41,7 @@ $config['hidden_login'] = false;            // Ocultar el botón de iniciar sesi
 $config['save_failed_attempt'] = true;      // Llevar un registro de los intentos de login fallidos.
 $config['attempts_to_block'] = 4;           // Número de intentos fallidos antes de bloquear la cuenta. 0 desactiva el bloqueo.
 $config['failed_attempt_expire'] = 600;     // Tiempo (en segundos) para que el intento de login fallido no se tome en cuenta.
-$config['blocking_time'] = 30;              // Tiempo de espera (en segundos) para desbloquear cuenta bloqueada.
+$config['blocking_time'] = 300;             // Tiempo de espera (en segundos) para desbloquear cuenta bloqueada.
 $config['password_reset'] = true;           // Activa la opción de recuperar clave si el usuario la olvida. Requere email configurado.
 
 /*
