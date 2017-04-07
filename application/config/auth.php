@@ -28,7 +28,7 @@ $config['logged_in_controller'] = 'app';    // El controlador donde el sistema d
 $config['activate_registration'] = true;    // Activar el registro de usuarios
 $config['register_with_name'] = false;      // Pedir el nombre en el registro
 $config['register_with_username'] = false;  // Pedir un nombre de usuario en el registro
-$config['register_with_terms'] = true;     // Pedir aceptar los términos de servicio en el registro
+$config['register_with_terms'] = true;      // Pedir aceptar los términos de servicio en el registro
 $config['activation_email'] = false;        // Envía un email de confirmación para el registro.
 $config['default_permissions'] = USER;      // Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
 $config['send_welcome_email'] = false;      // Depende de activation email.
@@ -87,13 +87,15 @@ $config['email_activation_button_text'] = 'Activar Cuenta';
 
 
 // Texto Email Bienvenida
-$config['email_welcome_subject'] = 'Bienvenido';
-$config['email_welcome_title'] = '';
+$config['email_welcome_subject'] = '¡Bienvenido!';
+$config['email_welcome_title'] = '¡Bienvenido!';
 $config['email_welcome_paragraphs'] = [
-    'p1' => '',
-    'p2' => ''
+    'p1' => 'Estamos muy felices de que estés junto a nosotros.',
+    'p2' => 'Queremos contarte un poco de nuestra apliación.',
+    'p3' => 'Puedes iniciar sesión en el enlace de abajo.',
+    'p4' => 'Eso es todo,',
 ];
-$config['email_welcome_button_text'] = '';
+$config['email_welcome_button_text'] = 'Ir a la Aplicación';
 
 // Texto Email Cambio Contraseña
 $config['email_passchange_subject'] = 'Cambio de Contraseña';

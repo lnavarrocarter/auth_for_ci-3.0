@@ -1,0 +1,21 @@
+<IfModule mod_env.c>
+## Credenciales de SMTP
+SetEnv SMTPUSER tu-usuario
+SetEnv SMTPPASS tu-contraseña
+SetEnv SMTPHOST tu-smtp-server
+SetEnv SMTPPORT tu-puerto
+</IfModule>
+
+# Asegurarse que va a index.php
+DirectoryIndex index.php
+
+# Asegúrate de configurar tu RewriteBase en la URL de tu proyecto. 
+# Si está en localhost/miproyecto/ entonces RewriteBase /miproyecto/
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.php|robots\.txt)
+RewriteRule ^(.*)$ index.php?/$1 [L]
+</IfModule>

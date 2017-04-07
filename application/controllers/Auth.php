@@ -33,29 +33,34 @@ class Auth extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        // Chequeo de Requerimientos
+        $errormsg = NULL;
         // Compara las versiones de PHP
         if (version_compare(PHP_VERSION, '7.0') == -1) {
-            echo 'Necesitas PHP 7.0 o superior para utilizar Ncai Auth for CI.';
-            echo '<br>';
-            echo 'No es tan dificil de instalar. Puedes ir a <a href="#" target="_blank">nuestra documentación</a> para encontrar instrucciones.';
-            die;
+            $errormsg .= '<p>Necesitas PHP 7.0 o superior para utilizar Ncai Auth for CI.</p>';
         }
-        // Carga las librerías requeridas
-        //$this->load->library('database');
-        //$this->load->library('form_validation');
-        //$this->load->library('session');
-        
+        // Chequear mod_rewrite
+        if (!in_array('mod_rewrite', apache_get_modules())) {
+            $errormsg .= '<p>Necesitas activar mod_rewrite en Apache 2. <code>sudo a2enmod rewrite</code>.</p>';
+        }
+        // Chequear mod_env
+        if (!in_array('mod_env', apache_get_modules())) {
+            $errormsg .= '<p>Necesitas activar mod_env en Apache 2. <code>sudo a2enmod env</code>.</p>';
+        }
+        if ($errormsg) {
+            $this->session->set_flashdata('error', $errormsg);
+        }
+        // Cargar Modelos
+        $this->load->model('User');
+        $this->load->model('LoginAttempt');
         // Cargar el Archivo de Configuración
         $this->config->load('auth');
-
-        // Si la tabla Users no existe, la crea.
+        // Autoinstalar la base de
         if ($this->config->item('auto_install_db') && !$this->db->table_exists('users')) {
             $this->load->library("migration");
             $this->migration->version(1);
         }
-        // Cargar el modelo User y LoginAttempt, porque este controlador realiza acciones asociadas a usuarios.
-        $this->load->model('User');
-        $this->load->model('LoginAttempt');
+        
     }
 
     public function index() {

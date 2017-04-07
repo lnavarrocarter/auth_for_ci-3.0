@@ -1,6 +1,8 @@
 # Ncai Auth for CI
 Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, flexible y totalmente personalizable.
 
+> NOTA: Ncai Auth se encuentra en fase Alpha. No deberías utilizarlo en producción hasta que no salga la primera versión oficial.
+
 ## Caracterísiticas
 
 1. **Auto-Instalable:** No debes preocuparte por instalar la base de datos. Simplemente coloca tus credenciales en /config/database.php y olvídate del resto. El la primera ejecución, Ncai Auth hará todo por ti.
@@ -19,6 +21,20 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 
 8. **Ultra personalizable:** Define el color de tus emails, las redes sociales, el texto, tu logo y todo lo demás simplemente utilizando el archivo de configuración. El constructor de correo lo hará todo por ti y hará tus correos lucir profesionales.
 
+## Requerimientos
+
+1. PHP 7.0 o superior
+
+2. Apache 2
+    
+    1. Mod Rewrite (`$ sudo a2enmod rewrite` para activarlo)
+
+    2. Mod Env (`$ sudo a2enmod env` para activarlo)
+
+3. MySQL, Postgre u otros.
+
+4. Una instalación fresca de Codeigniter 3.4.0 o superior
+
 ## Instalación y Configuración
 Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
@@ -28,15 +44,19 @@ Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
 3. Crea tu base de datos.
 
-4. En tu config/database.php, escribe las credenciales de tu base de datos.
+4. Renombra `.htaccess-default` a `.htaccess`.
 
-5. En config/auth.php, define las funciones a utilizar, configura tus correos y todo lo que necesitas.
+5. Escribe tus credenciales en de correo utilizando Env en el `.htaccess.` Si no deseas utlizar Env, puedes ir a `config/email.php` y escribir los valores manualmente. Recomendamos el uso de Env porque si trabajas en Control de Versión, tus credenciales no podrán ser vistas por otros usuarios.
 
-6. En config/routes.php escribe 'auth' como la ruta por defecto.
+6. En `config/database.php`, define las credenciales de tu base de datos.
 
-7. Ejecútalo, y disfruta la magia!
+7. En `config/auth.php`, define las funciones a utilizar, configura tus correos y todo lo que necesitas.
 
->NOTA: Ten en cuenta que Ncai Auth sobreescribirá la configuración que tengas en tus archivos de autoload.php, database.php, constants.php, email.php y migration.php. Es recomendable siempre instalarlo en una instancia fresca de Codeigniter. Si lo estás instalando en una instancia que ya posee configuraciones definidas en esos archivos, asegúrate de guardarlas o reconfigurarlas.
+8. En `config/routes.php` escribe 'auth' como la ruta por defecto.
+
+9. Ve a tu navegador, accede a tu instancia de Codeigniter y disfruta la magia!
+
+> NOTA: Ten en cuenta que Ncai Auth sobreescribirá la configuración que tengas en tus archivos de autoload.php, database.php, constants.php, email.php y migration.php. Es recomendable siempre instalarlo en una instancia fresca de Codeigniter. Si lo estás instalando en una instancia que ya posee configuraciones definidas en esos archivos, asegúrate de guardarlas o reconfigurarlas.
 
 ## Roadmap
 
