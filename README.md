@@ -54,6 +54,8 @@ Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
 7. Librería para CronJobs, como recordatorios para el usuario y eliminación de tokens.
 
+8. Confirmación de password para acciones sensibles de seguridad, bajo `auth/confirm`.
+
 ## Específicos
 
 ### Sobre el Sistema de Permisos
@@ -66,11 +68,24 @@ defined('USER')     OR define('USER', 1);       // User
 defined('ADMIN')    OR define('ADMIN', 2);      // Admin
 defined('SADMIN')   OR define('SADMIN', 4);     // Super Admin
 ```
-
-Estos permisos de guardan en la base de datos utilizando los operadores & y |.  
+Para agregar más permisos, simplemente debemos preocuparnos que el número que le sigue está multiplicado por dos. Además, puedes reescribir el sistema de acuerdo a la necesidad de tu aplicación. Por ejemplo:
 ```
-
+defined('CREATE_USER')     OR define('CREATE_USER', 1);
+defined('DELETE_USER')    OR define('DELETE_USER', 2);
+defined('VIEW_COURSE')   OR define('VIEW_COURSE', 4);
+defined('REGISTER_COURSE')   OR define('REGISTER_COURSE', 8);
 ```
+Parecido a como funcionan los permisos en UNIX (1 = read, 2 = write, 3 = execute), las sumatorias de éstos números producen resultados únicos que son fáciles de obtener utilizando el operador bitwise & en una query. Por ejemplo, en UNIX, si tengo un permiso 5, yo sé que los permisos que tienen son read (1) y execute (4) solamente. No hay otra suma posible de los valores asignados que me pueda dar 5. Así, es fácil indentificar múltiples permisos.
+
+Para guardar y revisar permisos es muy sencillo.
+```
+// Esto suma los tres, y guarda un integer 7 en la base de datos.
+$this->db->update('users', ['permissions' => USER], ['id' => $id]);
+
+// Para revisar, por ejemplo, si un usuario tiene un permiso, utilizamos la libería predefinida:
+$this->middleware->only_permission(ADMIN, 'app');
+```
+Lo que hace la útima función es permitir el acceso sólo a los que pertenecen al grupo de admins. Al resto, los va a redirigir a controlador app. Esto sirve para validar el acceso a un controlador. Sin embargo, pueden establecerse y validarse múltiples permisos tan sólo separandolos con el operador |.
 
 ## Contribuir
 1. Puedes [reportar un bug o sugerir una mejora](https://github.com/mnavarrocarter/ncai_auth_for_ci/issues).
