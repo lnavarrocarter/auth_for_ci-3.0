@@ -26,8 +26,10 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 1. PHP 7.0 o superior
 
 2. Apache 2
-    a. Mod Rewrite (`$ sudo a2enmod rewrite` para activarlo)
-    b. Mod Env (`$ sudo a2enmod env` para activarlo)
+    
+    1. Mod Rewrite (`$ sudo a2enmod rewrite` para activarlo)
+
+    2. Mod Env (`$ sudo a2enmod env` para activarlo)
 
 3. MySQL, Postgre u otros.
 
