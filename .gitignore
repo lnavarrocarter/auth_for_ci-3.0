@@ -6,6 +6,7 @@ index.php
 /application/hooks/*
 /application/config/*
 !auth.php
+!config.php
 !autoload.php
 !migrations.php
 !constants.php
@@ -16,10 +17,11 @@ index.php
 /application/core/*
 /application/data/*
 /application/helpers/*
-/application/language/*
+/application/language/english/*
 /application/logs/*
 /application/middlewares/*
 /application/templates/*
 /application/third_party/*
 /application/views/errors/*
 /application/views/user/*
+/.vscode/*

@@ -60,7 +60,6 @@ class Auth extends CI_Controller {
             $this->load->library("migration");
             $this->migration->version(1);
         }
-        
     }
 
     public function index() {
@@ -128,29 +127,47 @@ class Auth extends CI_Controller {
                         die;
                     }
                 }
-                // Chequea si inicia sesión con un nombre de usuario o un email y valida.
+                // Chequea si inicia sesión con un nombre de usuario o un email y valido.
                 if (strpos($this->input->post('login'), '@') !== false ) {
-                    $this->form_validation->set_rules('login', 'email', 'trim|required|min_length[5]|max_length[40]|valid_email');
+                    $this->form_validation->set_rules('login', 'correo electrónico', 'trim|required|min_length[5]|max_length[40]|valid_email');
                     $data['email'] = $this->input->post('login');                
                 } else {
-                    $this->form_validation->set_rules('login', 'username', 'trim|required');
+                    $this->form_validation->set_rules('login', 'nombre de usuario', 'trim|required');
                     $data['username'] = $this->input->post('login');
                 }
                 $this->session->set_flashdata('login', $this->input->post('login'));
-                $this->form_validation->set_rules('passwd', 'password', 'trim|required');
+                $this->form_validation->set_rules('passwd', 'contraseña', 'trim|required');
                 // Si el formulario no es válido, se devuelve a la vista anterior con un error.
                 if(!$this->form_validation->run()) {
                     $this->form_validation->set_error_delimiters('', '');
-                    $this->session->set_flashdata('error', validation_errors());
-                    redirect('auth');
+                    if ($this->config->item('use_ajax')) {
+                        $response = [
+                            'type' => 'error',
+                            'msg' => validation_errors()
+                            ];
+                        echo json_encode($response);
+                        die;
+                    } else {
+                        $this->session->set_flashdata('error', validation_errors());
+                        redirect('auth');
+                    }
                 // Si el formulario es válido, se inicia el proceso de inicio de sesión
                 } else {
                     // Se consulta a la base de datos por el usuario
                     $query = $this->User->read('users', $data);
                     // Si no existe el usuario, se devuelve error
                     if(!$query) {
-                        $this->session->set_flashdata('error', 'Usuario o contraseña incorrecto.');
-                        redirect('auth/login');
+                        if ($this->config->item('use_ajax')) {
+                            $response = [
+                                'type' => 'error',
+                                'msg' => 'Nombre de usuario o correo electrónico incorrecto.'
+                                ];
+                            echo json_encode($response);
+                            die;
+                        } else {
+                            $this->session->set_flashdata('error', 'Nombre de usuario o correo electrónico incorrecto.');
+                            redirect('auth/login');
+                        }
                     // Se hashea el password.
                     } else {
                         if ($this->config->item('use_salt')) {
@@ -162,11 +179,29 @@ class Auth extends CI_Controller {
                         if (!$query->is_active) {                            
                             $timediff = $query->blocked_time + $this->config->item('blocking_time');
                             if (!$query->blocked_time) {
-                                $this->session->set_flashdata('error', 'Tu usuario no está activo.');
-                                redirect('auth/login');
+                                if ($this->config->item('use_ajax')) {
+                                    $response = [
+                                        'type' => 'error',
+                                        'msg' => 'Tu usuario no está activo.'
+                                        ];
+                                    echo json_encode($response);
+                                    die;
+                                } else {
+                                    $this->session->set_flashdata('error', 'Tu usuario no está activo.');
+                                    redirect('auth/login');
+                                }
                             } elseif ($timediff > time() ) {
-                                $this->session->set_flashdata('error', 'Aún no puedes iniciar sesión. Por favor espera un poco más.');
-                                redirect('auth/login');
+                                if ($this->config->item('use_ajax')) {
+                                    $response = [
+                                        'type' => 'error',
+                                        'msg' => 'Aún no puedes iniciar sesión. Por favor espera un poco más.'
+                                        ];
+                                    echo json_encode($response);
+                                    die;
+                                } else {
+                                    $this->session->set_flashdata('error', 'Aún no puedes iniciar sesión. Por favor espera un poco más.');
+                                    redirect('auth/login');
+                                }
                             } elseif ($timediff < time() ) {
                                 // Borrar el blocked time y activar el usuario
                                 $data = [
@@ -189,15 +224,41 @@ class Auth extends CI_Controller {
                                 if (!$left) {
                                     // Resetear los intentos de login fallidos
                                     $this->clean_failed_attempts($query->id);
-                                    $this->session->set_flashdata('error', 'Tu cuenta ha sido desactivada temporalmente por múltiples intentos fallidos de inicio de sesión. Debes esperar '.gmdate("i:s", $this->config->item('blocking_time')).' para poder iniciar sesión otra vez. Si has olvidado tu contraseña, puedes cambiarla en la pantalla de inicio de sesión.');
-                                    redirect('auth/login');
+                                    if ($this->config->item('use_ajax')) {
+                                        $response = [
+                                            'type' => 'error',
+                                            'msg' => 'Tu cuenta ha sido desactivada temporalmente por múltiples intentos fallidos de inicio de sesión. Debes esperar '.gmdate("i:s", $this->config->item('blocking_time')).' para poder iniciar sesión otra vez. Si has olvidado tu contraseña, puedes cambiarla en la pantalla de inicio de sesión.'
+                                            ];
+                                        echo json_encode($response);
+                                        die;
+                                    } else {
+                                        $this->session->set_flashdata('error', 'Tu cuenta ha sido desactivada temporalmente por múltiples intentos fallidos de inicio de sesión. Debes esperar '.gmdate("i:s", $this->config->item('blocking_time')).' para poder iniciar sesión otra vez. Si has olvidado tu contraseña, puedes cambiarla en la pantalla de inicio de sesión.');
+                                        redirect('auth/login');
+                                    }
                                 } else {
-                                    $this->session->set_flashdata('warning', 'Contraseña incorrecta. Tienes '.$left.' intento(s) restante(s).');
-                                    redirect('auth/login');
+                                    if ($this->config->item('use_ajax')) {
+                                        $response = [
+                                            'type' => 'warning',
+                                            'msg' => 'Contraseña incorrecta. Tienes '.$left.' intento(s) restante(s).'
+                                            ];
+                                        echo json_encode($response);
+                                        die;
+                                    } else {
+                                        $this->session->set_flashdata('warning', 'Contraseña incorrecta. Tienes '.$left.' intento(s) restante(s).');
+                                        redirect('auth/login');
+                                    }
                                 }
                             } else {
-                                $this->session->set_flashdata('error', 'Contraseña incorrecta.');
-                                redirect('auth/login');
+                                if ($this->config->item('use_ajax')) {
+                                    $response = [
+                                        'type' => 'error',
+                                        'msg' => 'Contraseña incorrecta.'
+                                        ];
+                                    echo json_encode($response);
+                                } else {
+                                    $this->session->set_flashdata('error', 'Contraseña incorrecta.');
+                                    redirect('auth/login');
+                                }
                             }
                         } else {
                             // Construye el array con los datos de usuario
@@ -224,17 +285,26 @@ class Auth extends CI_Controller {
                                 $this->clean_failed_attempts($data['id']);
                             }
                             if ($this->config->item('save_failed_attempt')) {
-                            // Coloca flashdata
-                            $this->session->set_flashdata('success', 'Has iniciado sesión exitosamente. La última vez que lo hiciste fue el '.strftime('%A, %d de %B de %Y a las %H:%M', $this->session->userdata('lastlogin_time')).' desde '.$this->session->userdata('lastlogin_ip'));    
+                            // Coloca flashdata    
                             }
-                            $this->session->set_flashdata('success', 'Has iniciado sesión exitosamente.');    
-                            
                             // Chequea si smart redirect está activado. y si hay un redirect
                             if ($this->config->item('smart_redirect') && $this->session->userdata('redirect')) {
-                                redirect($this->session->userdata('redirect'));
+                                $redirect = $this->session->userdata('redirect');
                             // Si no, se manda a la vista normal.
                             } else {
-                                redirect($this->config->item('logged_in_controller'));
+                                $redirect = $this->config->item('logged_in_controller');
+                            }
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'redirect' => $redirect,
+                                    'type' => 'success',
+                                    'msg' => 'Iniciando sesión...'
+                                    ];
+                                echo json_encode($response);
+                                die;
+                            } else {
+                                $this->session->set_flashdata('success', 'Has iniciado sesión exitosamente. La última vez que lo hiciste fue el '.strftime('%A, %d de %B de %Y a las %H:%M', $this->session->userdata('lastlogin_time')).' desde '.$this->session->userdata('lastlogin_ip'));
+                                redirect($redirect);
                             }
                         }
                     }
@@ -257,8 +327,18 @@ class Auth extends CI_Controller {
         } else {
             $data = ['id', 'name1', 'lastname1', 'email', 'username', 'permissions', 'lastlogin_ip', 'lastlogin_time', 'logged_in'];
             $this->session->unset_userdata($data);;
-            $this->session->set_flashdata('success', 'Has cerrado sesión exitosamente.');
-            redirect('/');
+            if ($this->config->item('use_ajax')) {
+                $response = [
+                    'redirect' => base_url(),
+                    'type' => 'success',
+                    'msg' => 'Cerrando sesión...'
+                    ];
+                echo json_encode($response);
+                die;
+            } else {
+                $this->session->set_flashdata('success', 'Has cerrado sesión exitosamente.');
+                redirect('/');
+            }
         }
     }
 
@@ -297,27 +377,43 @@ class Auth extends CI_Controller {
                 }
                 // Valido el formulario de acuerdo al tipo de registro
                 if ($this->config->item('register_with_name')) {
-                    $this->form_validation->set_rules('name1', 'name', 'trim|required|min_length[1]|max_length[20]');
-                    $this->form_validation->set_rules('lastname1', 'lastname', 'trim|required|min_length[1]|max_length[20]');
+                    $this->form_validation->set_rules('name1', 'nombre', 'trim|required|min_length[1]|max_length[20]');
+                    $this->form_validation->set_rules('lastname1', 'apellido', 'trim|required|min_length[1]|max_length[20]');
                     $this->session->set_flashdata('name1', $this->input->post('name1'));
                     $this->session->set_flashdata('lastname1', $this->input->post('lastname1'));
                 } elseif ($this->config->item('register_with_username')) {
-                    $this->form_validation->set_rules('username', 'username', 'trim|required|min_length[5]|max_length[15]|is_unique[users.username]');
+                    $this->form_validation->set_rules('username', 'nombre de usuario', 'trim|required|min_length[5]|max_length[15]|is_unique[users.username]');
                     $this->session->set_flashdata('username', $this->input->post('username'));
                 }
-                $this->form_validation->set_rules('email', 'email', 'trim|required|min_length[5]|max_length[40]|valid_email|is_unique[users.email]');
+                $this->form_validation->set_rules('email', 'correo electrónico', 'trim|required|min_length[5]|max_length[40]|valid_email|is_unique[users.email]');
                 $this->session->set_flashdata('email', $this->input->post('email'));
-                $this->form_validation->set_rules('passwd', 'password', 'trim|required|min_length[5]|max_length[20]');
-                $this->form_validation->set_rules('passwd2', 'password confirm', 'trim|required|min_length[5]|max_length[20]|matches[passwd]');
+                $this->form_validation->set_rules('passwd', 'contraseña', 'trim|required|min_length[5]|max_length[20]');
+                $this->form_validation->set_rules('passwd2', 'confirmación de contraseña', 'trim|required|min_length[5]|max_length[20]|matches[passwd]');
                 // Si el formulario no es válido, mensaje de error
                 if(!$this->form_validation->run()) {
                     $this->form_validation->set_error_delimiters('', '');
-                    $this->session->set_flashdata('error', 'Hubo algunos problemas con tu formulario: '.validation_errors());
-                    redirect('auth/register');
+                    if ($this->config->item('use_ajax')) {
+                        $response = [
+                            'type' => 'error',
+                            'msg' => 'Hubo algunos problemas con tu formulario: '.validation_errors(),
+                            ];
+                        echo json_encode($response);
+                    } else {
+                        $this->session->set_flashdata('error', validation_errors());
+                        redirect('auth/register');
+                    }
                 // Verificar si tiene activado login por términos
                 } elseif ($this->config->item('register_with_terms') && !$this->input->post('terms')) {
+                    if ($this->config->item('use_ajax')) {
+                        $response = [
+                            'type' => 'error',
+                            'msg' => 'Debes aceptar los términos de servicio.',
+                            ];
+                        echo json_encode($response);
+                    } else {
                     $this->session->set_flashdata('error', 'Debes aceptar los términos de servicio.');
                     redirect('auth/register');
+                    }
                 // SI es válido, comienzo a construir los datos.
                 } else {
                     // Salteo y hasheo de password.
@@ -348,8 +444,16 @@ class Auth extends CI_Controller {
                     $query = $this->User->create('users', $data);
                     // Redireccionar al usuario dependiendo del resultado
                     if (!$query) {
+                        if ($this->config->item('use_ajax')) {
+                            $response = [
+                                'type' => 'error',
+                                'msg' => 'Hubo un problema procesando tu registro. Por favor intenta más tarde.',
+                                ];
+                            echo json_encode($response);
+                        } else {
                         $this->session->set_flashdata('error', 'Hubo un problema procesando tu registro. Por favor intenta más tarde.');
                         redirect('auth/register');
+                        }
                     // Chequea si la activación de cuenta por email está configurada.
                     } elseif ($this->config->item('activation_email')) {
                         // Se envía el email si todo sale bien.
@@ -361,15 +465,40 @@ class Auth extends CI_Controller {
                         $subject = $this->config->item('email_activation_subject');
                         // Mandar el correo con el link de activación.
                         if (!$this->send_email($data['email'], $subject, $body)) {
-                            $this->session->set_flashdata('warning', 'Hemos guardado tus datos exitosamente, pero por alguna razón no hemos podido enviarte un correo. Puedes activar tu cuenta haciendo click en <a href="'.$data['url'].'">este link</a>.');
-                            redirect('auth');
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'type' => 'warning',
+                                    'msg' => 'Hemos guardado tus datos exitosamente, pero por alguna razón no hemos podido enviarte un correo. Puedes activar tu cuenta haciendo click en <a href="'.$data['url'].'">este link</a>.',
+                                    ];
+                                echo json_encode($response);
+                            } else {
+                                $this->session->set_flashdata('warning', 'Hemos guardado tus datos exitosamente, pero por alguna razón no hemos podido enviarte un correo. Puedes activar tu cuenta haciendo click en <a href="'.$data['url'].'">este link</a>.');
+                                redirect('auth');
+                            }
                         } else {
-                        $this->session->set_flashdata('success', 'The has registrado exitosamente. Te hemos mandado un correo electrónico con instrucciones para activar tu cuenta.');
-                        redirect('auth/login');
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'type' => 'success',
+                                    'msg' => 'The has registrado exitosamente. Te hemos mandado un correo electrónico con instrucciones para activar tu cuenta.',
+                                    ];
+                                echo json_encode($response);
+                            } else {
+                            $this->session->set_flashdata('success', 'The has registrado exitosamente. Te hemos mandado un correo electrónico con instrucciones para activar tu cuenta.');
+                            redirect('auth/login');
+                            }
                         }
                     } else {
+                        if ($this->config->item('use_ajax')) {
+                            $response = [
+                                'redirect' => 'auth/login',
+                                'type' => 'success',
+                                'msg' => 'The has registrado exitosamente. Redirigiendo al inicio de sesión...',
+                                ];
+                            echo json_encode($response);
+                        } else {
                         $this->session->set_flashdata('success', 'The has registrado exitosamente. Ya puedes iniciar sesión.');
                         redirect('auth/login');
+                        }
                     }
                 }
             // Si es otro tipo de request, se devuelve un 400 (Bad Request)
@@ -436,23 +565,47 @@ class Auth extends CI_Controller {
                     $this->form_validation->set_rules('email', 'email', 'trim|required|min_length[5]|max_length[40]|valid_email');
                     // Si la validación falla, se redirige a la este método con error.
                     if(!$this->form_validation->run()) {
+                        if ($this->config->item('use_ajax')) {
+                            $response = [
+                                'type' => 'error',
+                                'msg' => 'Por favor, ingresa un campo válido de correo electrónico.',
+                                ];
+                            echo json_encode($response);
+                        } else {
                         $this->session->set_flashdata('error', 'Por favor, ingresa un campo válido de correo electrónico.');
                         redirect('auth/password_reset');
+                        }
                     // Si la validación es exitosa, se consulta la base de datos por el email.
                     } else {
                         $email = $this->input->post('email');
                         // Si el email no existe en la base de datos, se redirige al método con error.
                         if (!$this->User->read('users', ['email' => $email])) {
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'type' => 'error',
+                                    'msg' => 'No existe una cuenta asociada a esta dirección de correo.',
+                                    ];
+                                echo json_encode($response);
+                            } else {
                             $this->session->set_flashdata('error', 'No existe una cuenta asociada a esta dirección de correo.');
                             redirect('auth/password_reset');
+                            }
                         // Si el email existe, genero el token.
                         } else {
                             $token = bin2hex(random_bytes(30));
                             $query = $this->User->update('users', ['forgotten_password_code' => $token], ['email' => $email]);
                             // Si la query falla, alertamos al usuario.
                             if(!$query) {
-                                $this->session->set_flashdata('error', 'Algo salió mal. Por favor, intenta nuevamente.');
-                                redirect('auth/password_reset');
+                                if ($this->config->item('use_ajax')) {
+                                    $response = [
+                                        'type' => 'error',
+                                        'msg' => 'Algo salió mal. Por favor, intenta nuevamente.',
+                                        ];
+                                    echo json_encode($response);
+                                } else {
+                                    $this->session->set_flashdata('error', 'Algo salió mal. Por favor, intenta nuevamente.');
+                                    redirect('auth/password_reset');
+                                }
                             } else {
                                 // Se envía el email si todo sale bien.
                                 $data['url'] = base_url('auth/password_reset/'.$token);
@@ -463,12 +616,29 @@ class Auth extends CI_Controller {
                                 $subject = config_item('email_passchange_subject');
                                 // Si el email no se envía bien, alertar al usuario.
                                 if (!$this->send_email($email, $subject, $body)) {
+                                    if ($this->config->item('use_ajax')) {
+                                        $response = [
+                                            'type' => 'error',
+                                            'msg' => 'No hemos podido enviarte un correo electrónico. Intenta nuevamente.',
+                                            ];
+                                        echo json_encode($response);
+                                    } else {
                                     $this->session->set_flashdata('error', 'No hemos podido enviarte un correo electrónico. Intenta nuevamente.');
                                     redirect('auth');
+                                    }
                                 // Si se envía bien, terminamos el proceso con un mensaje de confirmación.
                                 } else {
-                                    $this->session->set_flashdata('success', 'Te hemos envíado un correo electrónico con un enlace para recuperar tu contraseña. No olvides revisar tu carpeta de spam si no ha llegado.');
-                                    redirect('auth');
+                                    if ($this->config->item('use_ajax')) {
+                                        $response = [
+                                            'redirect' => 'auth',
+                                            'type' => 'success',
+                                            'msg' => 'Te hemos envíado un correo electrónico con un enlace para recuperar tu contraseña. No olvides revisar tu carpeta de spam si no ha llegado.',
+                                            ];
+                                        echo json_encode($response);
+                                    } else {
+                                        $this->session->set_flashdata('success', 'Te hemos envíado un correo electrónico con un enlace para recuperar tu contraseña. No olvides revisar tu carpeta de spam si no ha llegado.');
+                                        redirect('auth');
+                                    }
                                 }
                             }
                         }
@@ -482,8 +652,16 @@ class Auth extends CI_Controller {
                     // Si el formulario no es válido, se manda un mensaje de error y se redirige con el token.
                     if(!$this->form_validation->run()) {
                         $this->form_validation->set_error_delimiters('', '');
-                        $this->session->set_flashdata('error', 'Hubo algunos problemas: '.validation_errors());
-                        redirect('auth/password_reset/'.$this->input->post('token'));
+                        if ($this->config->item('use_ajax')) {
+                            $response = [
+                                'type' => 'error',
+                                'msg' => validation_errors(),
+                                ];
+                            echo json_encode($response);
+                        } else {
+                            $this->session->set_flashdata('error', validation_errors());
+                            redirect('auth/password_reset/'.$this->input->post('token'));
+                        }
                     // Si es válido, se prepara la query
                     } else {
                         // Se chequea el token nuevamente y se devuelve el id del usuario.
@@ -499,12 +677,29 @@ class Auth extends CI_Controller {
                         $query = $this->User->update('users', $data, ['id' => $user->id]);
                         // Si la query falla, mensaje de error y de vuelta al login.
                         if (!$query) {
-                            $this->session->set_flashdata('error', 'Algo salió mal. Por favor, intenta nuevamente.');
-                            redirect('auth');
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'type' => 'error',
+                                    'msg' => 'Algo salió mal. Por favor, intenta nuevamente.',
+                                    ];
+                                echo json_encode($response);
+                            } else {
+                                $this->session->set_flashdata('error', 'Algo salió mal. Por favor, intenta nuevamente.');
+                                redirect('auth');
+                            }
                         // Si todo sale bien, a la pantalla de login y con mensaje de éxito.
                         } else {
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'redirect' => 'auth',
+                                    'type' => 'success',
+                                    'msg' => 'Tu contraseña fue existosamente cambiada. Redirigiendo al login...',
+                                    ];
+                                echo json_encode($response);
+                            } else {
                             $this->session->set_flashdata('success', 'Tu contraseña fue existosamente cambiada. Ahora puedes iniciar sesión.');
                             redirect('auth');
+                            }
                         }
                     }
                 // Si no, se devuelve un bad request.
