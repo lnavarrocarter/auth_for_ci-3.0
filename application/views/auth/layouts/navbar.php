@@ -13,7 +13,7 @@
                 <?php endif;?>
                 <?php else :?>
                 <li><a href="<?= base_url(config_item('logged_in_controller'))?>">Panel</a></li>
-                <li><a href="<?= base_url('auth/logout')?>">Cerrar Sesión</a></li>
+                <li><a id="logout" href="<?php if (config_item('use_ajax')) { echo '#'; } else { base_url('auth/logout'); }?>">Cerrar Sesión</a></li>
                 <?php endif;?>
             </ul>
         </nav>

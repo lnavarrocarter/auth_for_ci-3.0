@@ -14,6 +14,8 @@
     <link href="<?= base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
     <!-- Animations CSS -->
     <link href="<?= base_url('assets/css/animations.css')?>" rel="stylesheet">
+    <!-- Toastr -->
+    <link href="<?= base_url('assets/css/toastr.min.css')?>" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="<?= base_url('assets/css/ie10-viewport-bug-workaround.css')?>" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -23,6 +25,9 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script>
+        baseUrl = '<?= base_url();?>';
+    </script>
 </head>
 
 <body>
@@ -39,6 +44,12 @@
     <script src="<?= base_url('assets/js/jquery-3.2.0.min.js')?>"></script>
     <script src="<?= base_url('assets/js/bootstrap.min.js')?>"></script>
     <script src="<?= base_url('assets/js/css3-animate-it.js')?>"></script>
+    <!-- Alertify -->
+    <script src="<?= base_url('assets/js/toastr.min.js')?>"></script>
+    <?php if (config_item('use_ajax')):?>
+    <!-- AJAX Calls -->
+    <script src="<?= base_url('assets/js/ajax.js')?>"></script>
+    <?php endif;?>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="<?= base_url('assets/js/ie10-viewport-bug-workaround.js')?>"></script>
     <script type="text/javascript">

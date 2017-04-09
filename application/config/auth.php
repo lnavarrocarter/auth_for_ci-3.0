@@ -15,6 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // Opciones Generales
 $config['auto_install_db'] = true;          // Auto-instalar la estructura de la base de datos.
+$config['use_ajax'] = true;                 // Usar AJAX para las llamadas. !!Experimental
 
 // Opciones de Usuario
 $config['activate_plan_module'] = false;    // Módulo de plan. TODO
@@ -36,9 +37,9 @@ $config['send_welcome_email'] = false;      // Depende de activation email.
 // Opciones de Seguridad
 $config['use_salt'] = true;                 // Encriptar las contraseñas con un salt aleatoreo.
 $config['save_last_login'] = true;          // Guardar último login en la base de datos y notificar al usuario.
-$config['csrf_protection'] = true;          // Proteger los formularios de CSRF con un token.
+$config['csrf_protection'] = true;         // Proteger los formularios de CSRF con un token.
 $config['hidden_login'] = false;            // Ocultar el botón de iniciar sesión
-$config['save_failed_attempt'] = false;     // Llevar un registro de los intentos de login fallidos.
+$config['save_failed_attempt'] = true;      // Llevar un registro de los intentos de login fallidos.
 $config['attempts_to_block'] = 4;           // Número de intentos fallidos antes de bloquear la cuenta. 0 desactiva el bloqueo.
 $config['failed_attempt_expire'] = 600;     // Tiempo (en segundos) para que el intento de login fallido no se tome en cuenta.
 $config['blocking_time'] = 300;             // Tiempo de espera (en segundos) para desbloquear cuenta bloqueada.

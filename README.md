@@ -21,6 +21,8 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 
 8. **Ultra personalizable:** Define el color de tus emails, las redes sociales, el texto, tu logo y todo lo demás simplemente utilizando el archivo de configuración. El constructor de correo lo hará todo por ti y hará tus correos lucir profesionales.
 
+9. **Integración con Ajax:** Tan sólo con una pequeña opción en el archivo de configuración, desata todo el poder y el dinamismo de AJAX para tu sistema de login.
+
 ## Requerimientos
 
 1. PHP 7.0 o superior
