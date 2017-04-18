@@ -30,7 +30,7 @@ class User extends CI_Model {
     ##############################
 
     // Crea una entrada en la base de datos
-    public function create(string $table, array $data) {
+    public function create(string $table = 'users', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
         $query = $this->db->insert($table, $data);
@@ -38,7 +38,7 @@ class User extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table, array $data = NULL) {
+    public function read(string $table = 'users', array $data = NULL) {
         if (!$data) {
             $query = $this->db->get($table);
             return $query->result();
@@ -49,14 +49,14 @@ class User extends CI_Model {
     }
 
     // Actualiza una entrada en la base de datos
-    public function update(string $table, array $data, array $where) {
+    public function update(string $table = 'users', array $data, array $where) {
         $data['edited_at'] = time();
         $query = $this->db->update($table, $data, $where);
         return $query;
     }
 
     // Elimina una entrada en la base de datos
-    public function delete($table, array $where) {     
+    public function delete($table = 'users', array $where) {     
         $query = $this->db->delete($table, $where);
         return $query;
     }

@@ -14,8 +14,8 @@
     <link href="<?= base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
     <!-- Animations CSS -->
     <link href="<?= base_url('assets/css/animations.css')?>" rel="stylesheet">
-    <!-- Toastr -->
-    <link href="<?= base_url('assets/css/toastr.min.css')?>" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="<?= base_url('assets/css/sweetalert.css')?>" rel="stylesheet">
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="<?= base_url('assets/css/ie10-viewport-bug-workaround.css')?>" rel="stylesheet">
     <!-- Custom styles for this template -->
@@ -44,8 +44,8 @@
     <script src="<?= base_url('assets/js/jquery-3.2.0.min.js')?>"></script>
     <script src="<?= base_url('assets/js/bootstrap.min.js')?>"></script>
     <script src="<?= base_url('assets/js/css3-animate-it.js')?>"></script>
-    <!-- Alertify -->
-    <script src="<?= base_url('assets/js/toastr.min.js')?>"></script>
+    <!-- Sweet Alert -->
+    <script src="<?= base_url('assets/js/sweetalert.min.js')?>"></script> 
     <?php if (config_item('use_ajax')):?>
     <!-- AJAX Calls -->
     <script src="<?= base_url('assets/js/ajax.js')?>"></script>

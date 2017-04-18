@@ -35,7 +35,7 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 
 3. MySQL, Postgre u otros.
 
-4. Una instalación fresca de Codeigniter 3.4.0 o superior
+4. Una instalación fresca de Codeigniter 3.0.0 o superior
 
 ## Instalación y Configuración
 Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:

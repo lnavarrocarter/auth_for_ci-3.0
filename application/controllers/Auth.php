@@ -53,8 +53,6 @@ class Auth extends CI_Controller {
         // Cargar Modelos
         $this->load->model('User');
         $this->load->model('LoginAttempt');
-        // Cargar el Archivo de Configuración
-        $this->config->load('auth');
         // Autoinstalar la base de
         if ($this->config->item('auto_install_db') && !$this->db->table_exists('users')) {
             $this->load->library("migration");
@@ -68,10 +66,19 @@ class Auth extends CI_Controller {
         $this->load->view('auth/layouts/main', $data);
     }
 
-    ##############################
-    # MÉTODO DE INICIO DE SESIÓN #
-    ##############################
-
+/*
+|--------------------------------------------------------------------------
+| Método de Inicio de Sesión
+|--------------------------------------------------------------------------
+| Este método ejecuta todo el proceso de inicio de sesión. Sólo pueden
+| acceder a este método los usuarios que no tienen iniciada sesión. Cuando
+| el tipo de request es un GET, y viene con un campo de activate, activa
+| el usuario con un código de activación. Si no trae activate, llama a la
+| vista de inicio. Si el tipo de request es POST, entonces inicia el proceso
+| de inicio de sesión (validando, realizando queries, y ordenando el array
+| de los datos de usuario).
+|
+*/
     public function login() {
         // Si el usuario tiene sesión iniciada, no queremos que use este método. Lo pasamos al controlador post login.
         if ($this->session->userdata('logged_in')) {
@@ -174,6 +181,20 @@ class Auth extends CI_Controller {
                             $pass = $query->salt.$this->input->post('passwd');
                         } else {
                             $pass = $this->input->post('passwd');
+                        }
+                        // Chequea si el usuario está bloqueado
+                        if ($query->is_blocked) {
+                            if ($this->config->item('use_ajax')) {
+                                $response = [
+                                    'type' => 'error',
+                                    'msg' => 'Tu usuario se encuentra bloqueado.'
+                                    ];
+                                echo json_encode($response);
+                                die;
+                            } else {
+                                $this->session->set_flashdata('error', 'Tu usuario se encuentra bloqueado.');
+                                redirect('auth/login');
+                            }
                         }
                         // Chequea si el usuario está activo.
                         if (!$query->is_active) {                            
@@ -296,7 +317,7 @@ class Auth extends CI_Controller {
                             }
                             if ($this->config->item('use_ajax')) {
                                 $response = [
-                                    'redirect' => $redirect,
+                                    'redirect' => base_url().$redirect,
                                     'type' => 'success',
                                     'msg' => 'Iniciando sesión...'
                                     ];
@@ -316,10 +337,13 @@ class Auth extends CI_Controller {
         }
     }
 
-    ##############################
-    # MÉTODO DE CIERRE DE SESIÓN #
-    ##############################
-    
+/*
+|--------------------------------------------------------------------------
+| Método de Cierre de Sesión
+|--------------------------------------------------------------------------
+| Este sencillo método quita la información de la sesión.
+|
+*/
     public function logout() {
         // Si el usuario no tiene sesión iniciada, no queremos que use este método.
         if(!$this->session->userdata('logged_in')) {
@@ -391,11 +415,11 @@ class Auth extends CI_Controller {
                 $this->form_validation->set_rules('passwd2', 'confirmación de contraseña', 'trim|required|min_length[5]|max_length[20]|matches[passwd]');
                 // Si el formulario no es válido, mensaje de error
                 if(!$this->form_validation->run()) {
-                    $this->form_validation->set_error_delimiters('', '');
+                    $this->form_validation->set_error_delimiters("\n", '');
                     if ($this->config->item('use_ajax')) {
                         $response = [
                             'type' => 'error',
-                            'msg' => 'Hubo algunos problemas con tu formulario: '.validation_errors(),
+                            'msg' => 'Hubo algunos problemas con tu formulario:'."\n".validation_errors(),
                             ];
                         echo json_encode($response);
                     } else {
@@ -432,6 +456,8 @@ class Auth extends CI_Controller {
                     } else {
                         $data['is_active'] = 1;
                     }
+                    // Pongo el valor de bloqueo
+                    $data['is_blocked'] = 0;
                     // Obtener los campos
                     if ($this->config->item('register_with_name')) {
                         $data['name1'] = $this->input->post('name1');
