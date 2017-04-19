@@ -61,7 +61,7 @@ class Middleware {
     }
 
     // Forbids access only to selected permission
-   public function no_permission($permission, $redirect_to, $msg = FALSE) {
+    public function no_permission($permission, $redirect_to, $msg = FALSE) {
         if($this->CI->session->userdata('permissions') & $permission) {
             if ($msg) {
                 $this->CI->session->set_flashdata('error', 'No tienes permisos suficientes para acceder a este recurso.');
@@ -69,6 +69,54 @@ class Middleware {
             redirect($redirect_to);
         } else {
             // Pasa
+        }
+    }
+
+    public function onlyajax() {
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            die('Only AJAX requests allowed.');
+        }
+    }
+
+    // Delivers a response according to use_ajax function
+    public function response(string $msg, string $type, string $redirect = NULL, array $data = NULL) {
+        if (config_item('use_ajax')) {
+            $response['type'] = $type;
+            $response['msg'] = $msg;
+            if ($redirect) {
+                $response['redirect'] = $redirect;
+            }
+            if ($data) {
+                $this->CI->load->view($redirect, $data);
+            } else {
+                echo json_encode($response);
+                die;
+            }
+        } else {
+            $this->CI->session->set_flashdata($type, $msg);
+            if ($redirect) {
+                redirect($redirect);
+            } else {
+                redirect($_SERVER['HTTP_REFERER']);
+            }
+        }
+    }
+
+    // Renders a view according to use_ajax function
+    public function renderview(string $view, array $data) {
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            if (!config_item('use_ajax')) {
+                die('AJAX Requests are not allowed!');
+            } else {
+                $this->CI->load->view($view, $data);
+            }
+        // If is not an AJAX Request
+        } else {
+            if (config_item('use_ajax')) {
+                $data['script'] = $this->CI->uri->segment(1).'.js';
+            }
+            $data['content'] = $view;
+            $this->CI->load->view('layouts/main', $data);
         }
     }
 

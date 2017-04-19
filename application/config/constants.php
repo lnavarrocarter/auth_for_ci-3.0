@@ -88,7 +88,7 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 |--------------------------------------------------------------------------
 | Definición de Constantes para el Sistema de Permisos
 |--------------------------------------------------------------------------
-|
+| TODO: Translate constants definition
 | These are used to assign permissions or different levels of privileges
 | to the different users in a programmatic way, instead of query
 | another database table. You define them here and then, when you're

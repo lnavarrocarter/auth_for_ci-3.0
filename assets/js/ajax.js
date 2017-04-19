@@ -1,5 +1,7 @@
 var frm = $('form');
 frm.submit(function(ev) {
+    var submit = $('button').html();
+    $('button').html('<i class="fa fa-cog fa-2x fa-spin fa-fw"></i>');
     ev.preventDefault();
     $.ajax({
         type: frm.attr('method'),
@@ -7,12 +9,13 @@ frm.submit(function(ev) {
         url: frm.attr('action'),
         data: frm.serialize(),
         success: function(data) {
+            $('button').html(submit);
             if (data.redirect) {
                 swal({
                     title: '¡Exito!',
                     text: data.msg,
                     timer: 2000,
-                    type: 'success',
+                    type: data.type,
                     showConfirmButton: false
                 }, function() {
                     window.location.href = data.redirect;

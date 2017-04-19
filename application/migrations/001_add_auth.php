@@ -26,11 +26,6 @@ class Migration_Add_Auth extends CI_Migration {
                                 'type' => 'VARCHAR',
                                 'constraint' => '100'
                         ),
-                        'phone' => array(
-                                'type' => 'VARCHAR',
-                                'constraint' => '30',
-                                'null' => TRUE
-                        ),
                         'password' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '150',
@@ -58,6 +53,33 @@ class Migration_Add_Auth extends CI_Migration {
                         'lastname2' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '30',
+                                'null' => TRUE,
+                        ),
+                        'mobile' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '30',
+                                'null' => TRUE
+                        ),
+                        'phone' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '30',
+                                'null' => TRUE
+                        ),
+                        'birthdate' => array(
+                                'type' => 'INT',
+                                'constraint' => '11',
+                                'unsigned' => TRUE,
+                                'null' => TRUE,
+                        ),
+                        'gender' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                        'location' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '100',
                                 'null' => TRUE,
                         ),
                         'avatar_url' => array(
@@ -97,7 +119,7 @@ class Migration_Add_Auth extends CI_Migration {
                                 'unsigned' => TRUE,
                                 'null' => TRUE
                         ),
-                        'is_blocked' => array(
+                        'is_locked' => array(
                                 'type' => 'TINYINT',
                                 'constraint' => '1',
                                 'unsigned' => TRUE,
@@ -199,6 +221,11 @@ class Migration_Add_Auth extends CI_Migration {
                                 'constraint' => '30',
                                 'null' => TRUE,
                         ),
+                        'email' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '50',
+                                'null' => TRUE,
+                        ),
                         'max_members' => array(
                                 'type' => 'INT',
                                 'constraint' => 11,
@@ -206,13 +233,19 @@ class Migration_Add_Auth extends CI_Migration {
                         ),
                         'token' => array(
                                 'type' => 'VARCHAR',
-                                'constraint' => '30',
+                                'constraint' => '50',
                                 'null' => TRUE,
                         ),
                         'logo_url' => array(
                                 'type' => 'VARCHAR',
-                                'constraint' => '100',
+                                'constraint' => '200',
                                 'null' => TRUE,
+                        ),
+                        'is_active' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
                         ),
                         'created_at' => array(
                                 'type' => 'INT',
@@ -220,7 +253,7 @@ class Migration_Add_Auth extends CI_Migration {
                                 'unsigned' => TRUE,
                                 'null' => TRUE
                         ),
-                        'updated_at' => array(
+                        'edited_at' => array(
                                 'type' => 'INT',
                                 'constraint' => '11',
                                 'unsigned' => TRUE,
