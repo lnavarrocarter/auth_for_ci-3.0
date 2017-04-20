@@ -19,6 +19,11 @@
                 <li><a href="#contact">Página 3</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+            <li class="hidden-xs"><a href="#">
+                <?php if ($this->session->userdata('avatar')):?>
+                <img width="18px" src="<?= base_url('assets/img/profile/'.$this->session->userdata('avatar')) ?>">
+                <?php endif;?>
+            </a></li>
                 <li class="dropdown">
                     <?php if ($this->session->userdata('name1')):?>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?= $this->session->userdata('name1').' '.$this->session->userdata('lastname1')?> <span class="caret"></span></a>

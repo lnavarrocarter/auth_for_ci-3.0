@@ -183,3 +183,62 @@ var id = $(this).data('id');
         }
      })
 });
+
+var start = $('.upload-demo').html();
+
+$('body').on('change', '#upload', function () { 
+    var reader = new FileReader();
+    var measure = $('.upload-demo').width()
+    $('#btnUpload').hide();
+    $('#btnSave').show();
+    $('#btnCancel').show();
+    $uploadCrop = $('#upload-demo').croppie({
+        enableExif: true,
+        viewport: {
+            width: measure,
+            height: measure,
+            type: 'circle'
+        },
+        boundary: {
+            width: measure,
+            height: measure
+        }
+    });
+    reader.onload = function (e) {
+        $uploadCrop.croppie('bind', {
+            url: e.target.result
+        }).then(function(){
+            console.log('jQuery bind complete');
+        });
+    }
+    reader.readAsDataURL(this.files[0]);
+});
+
+$('body').on('click', '#btnCancel', function () {
+    $(".upload-demo").html(start);
+    $('#btnUpload').show();
+    $('#btnSave').hide();
+    $('#btnCancel').hide();
+});
+
+$('#btnSave').on('click', function (ev) {
+    var id = $(this).data('id');
+    $uploadCrop.croppie('result', {
+        type: 'canvas',
+        size: 'viewport'
+    }).then(function (resp) {
+
+        $.ajax({
+            url: baseUrl+'users/change_profile_img/'+id,
+            type: "POST",
+            data: {"image":resp},
+            success: function (data) {
+                html = '<img id="upload-demo" src="' + resp + '" alt="User Pic" class="img-circle img-responsive" />';
+                $(".upload-demo").html(html);
+                $('#btnUpload').show();
+                $('#btnSave').hide();
+                $('#btnCancel').hide();
+            }
+        });
+    });
+});

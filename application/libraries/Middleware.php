@@ -49,24 +49,44 @@ class Middleware {
     }
 
     // Allows access only to selected permission
-    public function only_permission($permission, $redirect_to, $msg = FALSE) {
+    public function only_permission($permission, $msg, $redirect = NULL ) {
         if($this->CI->session->userdata('permissions') & $permission) {
             // Pasa
         } else {
-            if ($msg) {
-                $this->CI->session->set_flashdata('error', 'No tienes permisos suficientes para acceder a este recurso.');
+            if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                $response['msg'] = $msg;
+                $response['type'] = 'error';
+                echo json_encode($response);
+                die;
+            } else {
+                if ($redirect) {
+                    redirect($redirect);
+                } else {
+                    $this->CI->session->set_flashdata('error', $msg);
+                    redirect($_SERVER['HTTP_REFERER']);
+                }
             }
-            redirect($redirect_to);
         }
     }
 
     // Forbids access only to selected permission
-    public function no_permission($permission, $redirect_to, $msg = FALSE) {
+    public function no_permission($permission, $msg, $redirect = NULL ) {
         if($this->CI->session->userdata('permissions') & $permission) {
             if ($msg) {
-                $this->CI->session->set_flashdata('error', 'No tienes permisos suficientes para acceder a este recurso.');
+                if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    $response['msg'] = $msg;
+                    $response['type'] = 'error';
+                    echo json_encode($response);
+                    die;
+                } else {
+                    if ($redirect) {
+                        redirect($redirect);
+                    } else {
+                        $this->CI->session->set_flashdata('error', $msg);
+                        redirect($_SERVER['HTTP_REFERER']);
+                    }
+                }
             }
-            redirect($redirect_to);
         } else {
             // Pasa
         }
@@ -74,7 +94,8 @@ class Middleware {
 
     public function onlyajax() {
         if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            die('Only AJAX requests allowed.');
+        } else {
+            die('Este método sólo acepta AJAX Requests.');
         }
     }
 

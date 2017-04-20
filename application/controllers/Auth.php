@@ -222,6 +222,7 @@ class Auth extends CI_Controller {
                                 'group_id'              => $query->group_id,
                                 'lastlogin_ip'          => $query->lastlogin_ip,
                                 'lastlogin_time'        => $query->lastlogin_time,
+                                'avatar'                => $query->avatar_url,
                                 'logged_in'             => TRUE
                             );
                             // Recordar sesión

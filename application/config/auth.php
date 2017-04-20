@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // Opciones Generales
 $config['auto_install_db'] = true;          // Auto-instalar la estructura de la base de datos.
-$config['use_ajax'] = true;                // Usar AJAX para las llamadas. !!Experimental
+$config['use_ajax'] = true;                 // Usar AJAX para las llamadas. !!Experimental
 $config['group_table'] = 'group';           // Nombre de la tabla de grupos 
 
 // Opciones de Usuario

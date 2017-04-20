@@ -18,6 +18,8 @@
     <link href="<?= base_url('assets/css/custom.css')?>" rel="stylesheet">
     <!-- Animations CSS -->
     <link href="<?= base_url('assets/css/animations.css')?>" rel="stylesheet">
+    <!-- Croppie -->
+    <link href="<?= base_url('assets/css/croppie.css')?>" rel="stylesheet">
     <!-- Bootstrap Select -->
     <link href="<?= base_url('assets/css/bootstrap-select.min.css')?>" rel="stylesheet">
     <!-- Sweet Alert -->
@@ -66,6 +68,10 @@
     <script src="<?= base_url('assets/js/bootstrap-select.min.js')?>"></script>
     <!-- Sweet Alert -->
     <script src="<?= base_url('assets/js/sweetalert.min.js')?>"></script> 
+    <!-- Croppie -->
+    <script src="<?= base_url('assets/js/croppie.js')?>"></script>
+    <!-- Masked Input -->
+    <script src="<?= base_url('assets/js/masked-input.min.js')?>"></script> 
     <!-- Custom JS -->
     <script src="<?= base_url('assets/js/custom.js')?>"></script>
     <!-- View Specific JS -->

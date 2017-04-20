@@ -30,7 +30,7 @@ class Users extends CI_Controller {
 
     // Llama una vista que muestra todos los recursos
     public function index() {
-        $this->middleware->only_permission(PERM['sadmin'], 'users/show/'.$this->session->userdata('id'));
+        $this->middleware->only_permission(PERM['sadmin'],'No tienes los permisos suficientes para realizar esta acción.' ,'users/show/'.$this->session->userdata('id'));
         $data['users'] = $query = $this->User->read();
         $data['title'] = 'Listado de Usuarios';
         $data['description'] = 'Aquí puedes ver una lista de todos los usuarios.';
@@ -55,7 +55,10 @@ class Users extends CI_Controller {
 
     // Ejecuta el proceso para crear un nuevo recurso
     public function create() {
-        // TODO: Porteger el método users/create (solo admin y superadmin)
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
+        if ($this->session->userdata('permissions') & PERM['admin']) {
+
+        }
         // Valido los datos
         $this->form_validation->set_rules('name1', 'nombre', 'trim|required|min_length[1]|max_length[20]');
         $this->form_validation->set_rules('lastname1', 'apellido', 'trim|required|min_length[1]|max_length[20]');
@@ -119,6 +122,7 @@ class Users extends CI_Controller {
 
     // Ejecuta el proceso para editar un recurso existente
     public function update($id) {
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
         // TODO: Validar el método user/update
         // Valido los datos
         $this->form_validation->set_rules('name1', 'nombre', 'trim|required|min_length[1]|max_length[20]');
@@ -169,6 +173,7 @@ class Users extends CI_Controller {
 
     // Ejecuta el proceso para borrar un recurso existente
     public function destroy($id) {
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
         // TODO: Validar el método user/destroy
         $query = $this->User->delete('users', ['id' => $id]);
         if (!$query) {
@@ -185,6 +190,7 @@ class Users extends CI_Controller {
 
     // Bloquea un usuario
     public function lock($id) {
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
         $data['is_locked'] = 1;
         $query = $this->User->update('users', $data, ['id' => $id]);
         if (!$query) {
@@ -197,7 +203,8 @@ class Users extends CI_Controller {
 
     // Desbloquea un usuario
     public function unlock($id) {
-    $data['is_locked'] = 0;
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
+        $data['is_locked'] = 0;
         $query = $this->User->update('users', $data, ['id' => $id]);
         if (!$query) {
             $this->middleware->response('Imposible desbloquar el usuario. Intente más tarde.', 'error');
@@ -205,6 +212,21 @@ class Users extends CI_Controller {
             $data['users'] = $this->User->read();
             $this->middleware->response('Usuario desbloqueado correctamente', 'success', 'users/index', $data);
         }
+    }
+
+    // Cambia la imagen de perfil de un usuario
+    public function change_profile_img($id) {
+        $this->middleware->onlyajax();
+        $data = $this->input->post('image');
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+        $data = base64_decode($data);
+        $imageName = sha1($id).'.png';
+        $this->User->update('users', ['avatar_url' => $imageName], ['id' => $id]);
+        if ($id == $this->session->userdata('id')) {
+            $this->session->set_userdata(['avatar' => $imageName]);
+        }
+        file_put_contents('assets/img/profile/'.$imageName, $data);
     }
 
 }
