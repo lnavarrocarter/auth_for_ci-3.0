@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
         <select name="permissions[]" class="form-control selectpicker" multiple>
-            <?php $perms = get_permissions($this->session->userdata('permissions'))?>
+            <?php $perms = get_lower_permissions($this->session->userdata('permissions'))?>
             <?php foreach ($perms as $key => $val):?>
                 <option value="<?= $key ?>"><?= $val ?></option>
             <?php endforeach;?>

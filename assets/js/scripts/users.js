@@ -1,9 +1,7 @@
 /*
 |--------------------------------------------------------------------------
-| Crear un nuevo usuario
+| Crear un nuevo usuario - Vista Users
 |--------------------------------------------------------------------------
-| Este es el AJAX Request para crear un nuevo usuario.
-|
 */
 $('body').on('click', '[new]', function () {
     $('#newUser').modal({ show: 'true' });
@@ -46,10 +44,8 @@ $('body').on('submit', '#createForm', function (ev) {
 
 /*
 |--------------------------------------------------------------------------
-| Editar un Usuario
+| Editar un Usuario - Vista Usuarios
 |--------------------------------------------------------------------------
-| Este es el AJAX Request para editar un nuevo usuario.
-|
 */
 $('body').on('click', '[edit]', function () {
     var id = $(this).data('id');
@@ -95,10 +91,8 @@ $('body').on('submit', '#editForm', function (ev) {
 
 /*
 |--------------------------------------------------------------------------
-| Eliminar Usuario
+| Eliminar Usuario - Vista Users
 |--------------------------------------------------------------------------
-| Este es el AJAX Request para eliminar un usuario.
-|
 */
 $('body').on('click', '[delete]', function () {
 var id = $(this).data('id');
@@ -112,8 +106,6 @@ var id = $(this).data('id');
         closeOnConfirm: false
     },
     function() {
-        $(".modal-body #sca_id").val( id );
-        // Obtener Datos
         $.ajax({
             url: baseUrl + 'users/destroy/'+id,
             method: 'get',
@@ -134,10 +126,8 @@ var id = $(this).data('id');
 
 /*
 |--------------------------------------------------------------------------
-| Bloquear Usuario
+| Bloquear Usuario- Vista Users
 |--------------------------------------------------------------------------
-| Este es el AJAX Request para eliminar un usuario.
-|
 */
 $('body').on('click', '[lock]', function () {
 var id = $(this).data('id');
@@ -160,11 +150,10 @@ var id = $(this).data('id');
 
 /*
 |--------------------------------------------------------------------------
-| Desbloquear Usuario
+| Desbloquear Usuario - Vista Users
 |--------------------------------------------------------------------------
-| Este es el AJAX Request para eliminar un usuario.
-|
 */
+
 $('body').on('click', '[unlock]', function () {
 var id = $(this).data('id');
     $.ajax({
@@ -183,6 +172,12 @@ var id = $(this).data('id');
         }
      })
 });
+
+/*
+|--------------------------------------------------------------------------
+| Croppie
+|--------------------------------------------------------------------------
+*/
 
 var start = $('.upload-demo').html();
 

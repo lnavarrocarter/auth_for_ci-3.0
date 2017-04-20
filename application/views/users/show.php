@@ -1,9 +1,21 @@
 <div class="container">
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
+            <?php if ($user->is_locked):?>
+            <div class="panel panel-danger">
+            <?php else :?>
             <div class="panel panel-default">
+            <?php endif;?>
                 <div class="panel-heading">
-                    <h4><?= $user->name1.' '.$user->lastname1 ?></h4>
+                    <h4 class="panel-title">
+                    <?php if ($user->name1):?>
+                    <?= $user->name1.' '.$user->lastname1 ?><?php if ($user->username) { echo ' (@'.$user->username.')'; } ?>
+                    <?php elseif ($user->username):?>
+                    <?= $user->username ?>
+                    <?php else:?>
+                    <?= $user->email ?>
+                    <?php endif; ?>   
+                    </h4>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -26,7 +38,7 @@
                                     <tr>
                                         <tr>
                                             <td>Sexo:</td>
-                                            <td><?php if ($user->gender == 2 ) { echo 'Masculino'; } elseif ($user->gender == 1 ) { echo 'Femenino'; } else { echo 'No Definido'; } ?> </td>
+                                            <td><?php get_gender($user->gender) ?> </td>
                                         </tr>
                                         <tr>
                                             <td>Comuna, Ciudad, País:</td>
@@ -65,19 +77,19 @@
                 <button style="display: none;" id="btnSave" data-toggle="tooltip" data-original-title="Guardar" data-id="<?= $user->id ?>" class="btn btn-success btn-sm"><i class="fa fa-save fa-fw"></i></button>
                 <button style="display: none;" id="btnCancel" data-toggle="tooltip" data-original-title="Cancelar" class="btn btn-danger btn-sm"><i class="fa fa-ban fa-fw"></i></button>
                 <span class="pull-right">
-                    <a href="edit.html" data-original-title="Editar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">
+                    <a edit <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/unlock/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Editar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">
                         <i class="fa fa-edit fa-fw"></i>
                     </a>
                     <?php if ($user->is_locked): ?>
-                    <a href="edit.html" data-original-title="Bloquear este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
+                    <a unlock <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/unlock/'.$user->id)?>"<?php endif;?> data-original-title="Bloquear este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
                         <i class="fa fa-unlock fa-fw"></i>
                     </a>
                     <?php else :?>
-                    <a href="edit.html" data-original-title="Bloquear este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
+                    <a lock <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/lock/'.$user->id)?>"<?php endif;?> data-original-title="Bloquear este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
                         <i class="fa fa-lock fa-fw"></i>
                     </a>
                     <?php endif;?>
-                    <a data-original-title="Eliminar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger">
+                    <a delete <?php if (!config_item( 'use_ajax')):?> href="<?= base_url('users/destroy/'.$user->id)?>"<?php endif;?> data-original-title="Eliminar este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger">
                         <i class="fa fa-trash fa-fw"></i>
                     </a>
             </span>
@@ -86,3 +98,21 @@
         </div>
     </div>
 </div>
+<!-- INICIO: Modal Editar Usuario -->
+<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-id>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Editar Usuario</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1" id="contentEditUser">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FIN: Modal Editar Usuario -->

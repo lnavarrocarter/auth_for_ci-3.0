@@ -66,8 +66,6 @@ class Auth extends CI_Controller {
         $this->load->view('auth/layouts/main', $data);
     }
 
-// TODO: Optimize code using more helper functions for all the methods.
-
 /*
 |--------------------------------------------------------------------------
 | Método de Inicio de Sesión
@@ -218,7 +216,7 @@ class Auth extends CI_Controller {
                                 'name1'                 => $query->name1,
                                 'lastname1'             => $query->lastname1,
                                 'email'                 => $query->email,
-                                'permissions'           => decbin($query->permissions),
+                                'permissions'           => $query->permissions,
                                 'group_id'              => $query->group_id,
                                 'lastlogin_ip'          => $query->lastlogin_ip,
                                 'lastlogin_time'        => $query->lastlogin_time,
@@ -271,18 +269,26 @@ class Auth extends CI_Controller {
         if(!$this->session->userdata('logged_in')) {
             redirect($this->config->item('/'));
         } else {
-            $data = ['id', 'name1', 'lastname1', 'email', 'username', 'permissions', 'lastlogin_ip', 'lastlogin_time', 'logged_in'];
+            $data = ['id', 'avatar', 'name1', 'lastname1', 'email', 'username', 'permissions', 'lastlogin_ip', 'lastlogin_time', 'logged_in'];
             $this->session->unset_userdata($data);;
             $msg = 'Has cerrado sesión exitosamente.';
             $this->middleware->response($msg, 'success', base_url());
         }
     }
 
-    #################################
-    # MÉTODO DE REGISTRO DE USUARIO #
-    #################################
+/*
+|--------------------------------------------------------------------------
+| Método de Registro
+|--------------------------------------------------------------------------
+| Este método registra a un usuario en el sistema. Puede recibir tanto
+| POST como GET requests. Cuando viene con un GET, carga el formulario de 
+| inicio de sesión. Cuando manda el POST, ejecuta todas las funciones para
+| validar el formulario, hacer chequeos internos, ordenar los datos y 
+| colocarlos en la base de datos. Las respuestas se dan automaticamente
+| para llamadas ajax o convencionales.
+|
+*/
 
-    // Registra un usuario en el sistema
     public function register() {
         // Si el módulo de registro está desactivado, bloqueamos el acceso a este método.
         if (!$this->config->item('activate_registration')) {
@@ -393,9 +399,17 @@ class Auth extends CI_Controller {
         }
     }
 
-    ##################################
-    # MÉTODO DE RECUPERAR CONTRASEÑA #
-    ##################################
+/*
+|--------------------------------------------------------------------------
+| Método de Recuperar Contraseña
+|--------------------------------------------------------------------------
+| Este método recupera la contraseña para un usuario de sistema, ingresando
+| un correo electrónico válido, que envía un correo electrónico al usuario
+| con un link de cambio de contraseña. GET requests muestran las vistas. 
+| POST requests realizan las acciones. Las respuestas son dadas de acuerdo 
+| a Ajax o convencionales.
+|
+*/
 
     public function password_reset(string $token = NULL) {
         // Si esta función está desactivada, no permitimos el acceso al método.
@@ -533,9 +547,16 @@ class Auth extends CI_Controller {
         }
     }
 
-    #################################
-    # FUNCIONES DE APOYO PROTEGIDAS #
-    #################################
+/*
+|--------------------------------------------------------------------------
+| Funciones de Apoyo
+|--------------------------------------------------------------------------
+| Las funciones de apoyo ayudan a las funciones principales a realizar
+| tareas relativas a la autenticación. Son funciones que se requieren
+| seguido y que se colocan aquí para no ocupar tanto espacio en el código.
+| Además, están protegidas, por lo que no pueden ser llamadas desde una URI.
+|
+*/
 
     // Guarda el último login del usuario en la base de datos
     protected function last_login($id) {

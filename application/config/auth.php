@@ -21,6 +21,10 @@ $config['group_table'] = 'group';           // Nombre de la tabla de grupos
 // Opciones de Usuario
 $config['activate_plan_module'] = false;    // Módulo de plan. TODO
 $config['plan_default_value'] = 0;          // 0 es sin plan. TODO
+$config['user_location'] = true;            // 
+$config['user_birthdate'] = true;           // 
+$config['user_gender'] = true;              // 
+$config['user_phone'] = true;               // 
 
 // Opciones de Inicio de Sesión
 $config['smart_redirect'] = true;           // Activa redireccionamiento inteligente. Ver Wiki para configurar.

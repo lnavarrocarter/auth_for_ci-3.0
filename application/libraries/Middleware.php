@@ -92,6 +92,7 @@ class Middleware {
         }
     }
 
+    // TODO: Pasar lo de abajo al Auth Helper. No es propiamente middleware.
     public function onlyajax() {
         if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         } else {

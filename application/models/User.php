@@ -44,7 +44,11 @@ class User extends CI_Model {
             return $query->result();
         } else {
             $query = $this->db->get_where($table, $data);
-            return $query->row();
+            if ($query->num_rows() > 0) {
+                return $query->row();
+            } else {
+                redirect('users/show/'.$this->session->userdata('id'));
+            }
         }
     }
 
