@@ -4,7 +4,7 @@
 |--------------------------------------------------------------------------
 */
 $('body').on('click', '[new]', function () {
-    $('#newUser').modal({ show: 'true' });
+    $("#newUser").modal();
     $.ajax({
         url: baseUrl + 'users/new',
         method: 'get',
@@ -36,6 +36,7 @@ $('body').on('submit', '#createForm', function (ev) {
                 $('#content').html(data);
                 $('#dataTable').DataTable();
                 $('.modal-backdrop').hide(true);
+                $("body").removeClass('modal-open');
                 swal("¡Bien!", "El nuevo usuario ha sido creado exitosamente.", "success");
             }
         }
@@ -49,7 +50,7 @@ $('body').on('submit', '#createForm', function (ev) {
 */
 $('body').on('click', '[edit]', function () {
     var id = $(this).data('id');
-    $('#editUser').modal({ show: 'true' });
+    $("#editUser").modal();
     // Obtener Datos
     $.ajax({
         url: baseUrl + 'users/edit/'+id,
@@ -60,6 +61,8 @@ $('body').on('click', '[edit]', function () {
                 $('#contentEditUser').html(response);
                 // Renders the select picker
                 $('.selectpicker').selectpicker('render');
+                $("#phone").mask("(+56) 9 9999 9999");
+                $("#mobile").mask("(+56) 9 9999 9999");
             } else {
                 console.log('No data returned.');
             }
@@ -83,6 +86,7 @@ $('body').on('submit', '#editForm', function (ev) {
                 $('#content').html(data);
                 $('#dataTable').DataTable();
                 $('.modal-backdrop').hide(true);
+                $("body").removeClass('modal-open');
                 swal("¡Bien!", "El usuario ha sido editado exitosamente.", "success");
             }
         }
@@ -235,5 +239,85 @@ $('#btnSave').on('click', function (ev) {
                 $('#btnCancel').hide();
             }
         });
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Cambiar Conraseña
+|--------------------------------------------------------------------------
+*/
+$('body').on('click', '[passwd-ch]', function () {
+    var id = $(this).data('id');
+    $("#passwdChange").modal();
+    // Obtener Datos
+    $.ajax({
+        url: baseUrl + 'users/passwd_change/'+id,
+        method: 'get',
+        dataType: 'html',
+        success: function(response) {
+            if (response) {
+                $('#contentPasswdChange').html(response);
+            } else {
+                console.log('No data returned.');
+            }
+        }
+     })
+});
+
+// Selects and blocks the form.
+$('body').on('submit', '#passwdChange', function (ev) {
+    ev.preventDefault();
+    $.ajax({
+        type: $(this).attr('method'),
+        dataType: 'html',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (data) {
+            try {
+                json = $.parseJSON(data);
+                swal("¡Error!", json.msg, json.type);
+            } catch (error) {
+                $('#content').html(data);
+                $('.modal-backdrop').hide(true);
+                $("body").removeClass('modal-open');
+                swal("¡Bien!", "Su contraseña ha sido cambiada exitosamente.", "success");
+            }
+        }
+    });
+});
+
+/*
+|--------------------------------------------------------------------------
+| Reestablecer Contraseña
+|--------------------------------------------------------------------------
+*/
+$('body').on('click', '[passwd-rst]', function () {
+var id = $(this).data('id');
+    swal({
+        title: "¿Estás seguro?",
+        text: "Se enviará un correo electrónico al usuario para reestablecer su conraseña.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Si, estoy seguro",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true,
+    },
+    function() {
+        $.ajax({
+            url: baseUrl + 'users/passwd_reset/'+id,
+            method: 'get',
+            dataType: 'html',
+            success: function (data) {
+                try {
+                    json = $.parseJSON(data);
+                    swal("¡Error!", json.msg, json.type);
+                } catch (error) {
+                    $('#content').html(data);
+                    swal("¡Bien!", "Se ha enviado un correo con instrucciones al usuario para reestablecer su conraseña.", "success");
+                }
+            }
+         })
     });
 });

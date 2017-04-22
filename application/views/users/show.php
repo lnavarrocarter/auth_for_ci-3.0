@@ -33,7 +33,7 @@
                                 <tbody>
                                     <tr>
                                         <td>Fecha de Nacimiento:</td>
-                                        <td><?php if ($user->birthdate) { echo strftime('%d/%m/%y', $user->edited_at); } else { echo 'No Definido'; } ?></td>
+                                        <td><?php if ($user->birthdate) { echo strftime('%d/%m/%y', $user->birthdate).' ('.timespan($user->birthdate, time(), 1).')'; } else { echo 'No Definido'; } ?></td>
                                     </tr>
                                     <tr>
                                         <tr>
@@ -77,9 +77,18 @@
                 <button style="display: none;" id="btnSave" data-toggle="tooltip" data-original-title="Guardar" data-id="<?= $user->id ?>" class="btn btn-success btn-sm"><i class="fa fa-save fa-fw"></i></button>
                 <button style="display: none;" id="btnCancel" data-toggle="tooltip" data-original-title="Cancelar" class="btn btn-danger btn-sm"><i class="fa fa-ban fa-fw"></i></button>
                 <span class="pull-right">
-                    <a edit <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/unlock/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Editar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">
+                    <a edit <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/edit/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Editar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">
                         <i class="fa fa-edit fa-fw"></i>
                     </a>
+                    <?php if ($this->session->userdata('id') == $user->id):?>
+                        <a passwd-ch <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/passwd_change/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Cambiar contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
+                            <i class="fa fa-key fa-fw"></i>
+                        </a>
+                    <?php else:?>
+                        <a passwd-rst <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/passwd_reset/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Reestablecer contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
+                            <i class="fa fa-key fa-fw"></i>
+                        </a>
+                    <?php endif;?>
                     <?php if ($user->is_locked): ?>
                     <a unlock <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/unlock/'.$user->id)?>"<?php endif;?> data-original-title="Bloquear este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
                         <i class="fa fa-unlock fa-fw"></i>

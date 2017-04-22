@@ -31,7 +31,7 @@
         <input type="date" name="birthdate" class="form-control" value="<?= $user->birthdate ?>" placeholder="Fecha de Nacimiento">
     </div>
     <?php endif;?>
-    <?php if (config_item('user_location')):?>
+    <?php if (config_item('user_gender')):?>
     <div class="form-group">
         <select name="gender" class="form-control" value="<?= $user->gender ?>" placeholder="Sexo">
             <option value="1">Masculino</option>
@@ -42,6 +42,14 @@
     <?php if (config_item('user_location')):?>
     <div class="form-group">
         <input type="text" name="location" class="form-control" value="<?= $user->location ?>" placeholder="Ubicación (Comuna, Ciudad, País)">
+    </div>
+    <?php endif;?>
+    <?php if (config_item('user_phone')):?>
+    <div class="form-group">
+        <input id="mobile" type="text" name="mobile" class="form-control" value="<?= $user->mobile ?>" placeholder="Teléfono móvil">
+    </div>
+    <div class="form-group">
+        <input id="phone" type="text" name="phone" class="form-control" value="<?= $user->phone ?>" placeholder="Otro teléfono">
     </div>
     <?php endif;?>
     <div class="form-group">
