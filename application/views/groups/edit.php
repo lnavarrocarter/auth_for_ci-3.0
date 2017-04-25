@@ -12,34 +12,6 @@
         <input type="text" name="token" class="form-control" value="<?= $group->token ?>" placeholder="Token de Acceso" required>
     </div>
     <div class="form-group">
-        <input type="submit" class="btn btn-success" value="Editar">
+        <button id="submit" type="submit" class="btn btn-lg btn-primary">Editar</button>
     </div>
 </form>
-<script>
-// Crea un usuario
-var frm = $('#editForm');
-frm.submit(function (ev) {
-    ev.preventDefault();
-    $.ajax({
-        type: frm.attr('method'),
-        dataType: 'html',
-        url: frm.attr('action'),
-        data: frm.serialize(),
-        success: function (data) {
-            try {
-                json = $.parseJSON(data);
-            } catch(success) {
-                $('#content').html(data);
-                $('.modal-backdrop').hide(true);
-                swal("¡Bien!", "El grupo ha sido editado exitosamente.", "success");
-            } finally {
-                if (json.type == 'error') {
-                swal("¡Error!", json.msg, "error");
-                } else {
-                success
-                }
-            }
-        }
-    });
-});
-</script>

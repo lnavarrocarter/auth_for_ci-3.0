@@ -9,6 +9,6 @@
         <input type="password" name="passwd2" class="form-control" placeholder="Confirmar nueva contraseña" required>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-lg btn-default">Cambiar Contraseña</button>
+        <button id="submit" type="submit" class="btn btn-lg btn-warning">Cambiar Contraseña</button>
     </div>
 </form>

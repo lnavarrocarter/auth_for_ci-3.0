@@ -9,7 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title><?= config_item('app_name')?> | <?= $title?></title>
+    <title>
+        <?= config_item('app_name')?> |
+            <?= $title?>
+    </title>
     <!-- Bootstrap core CSS -->
     <link href="<?= base_url('assets/css/bootstrap.min.css')?>" rel="stylesheet">
     <!-- Font Awesome -->
@@ -32,29 +35,18 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script>
-        baseUrl = '<?= base_url();?>';
+    baseUrl = '<?= base_url();?>';
     </script>
 </head>
 
 <body>
-    <div class="site-wrapper">
-        <div class="site-wrapper-inner">
-            <div class="cover-container">
-                <?php $this->load->view('layouts/navbar')?>
-                <?php $this->load->view('auth/layouts/errors')?>
-                <div class="container">
-                    <div class="page-header">
-                        <h1><?= $title ?></h1>
-                    </div>
-                    <p class="lead"><?= $description ?></p>
-                    <div id="content">
-                        <?php $this->load->view($content)?>
-                    </div>
-                </div>
-                <?php $this->load->view('layouts/footer')?>
-            </div>
+        <?php $this->load->view('layouts/navbar')?>
+        <?php $this->load->view('auth/layouts/errors')?>
+        <div id="content">
+        <?php $this->load->view($content)?>
         </div>
-    </div>
+        <?php $this->load->view('layouts/modal')?>
+        <?php $this->load->view('layouts/footer')?>
     <!-- Cargar jQuery -->
     <script src="<?= base_url('assets/js/jquery-3.2.0.min.js')?>"></script>
     <!-- Boostrap JS -->
@@ -67,46 +59,15 @@
     <!-- Bootstrap Select -->
     <script src="<?= base_url('assets/js/bootstrap-select.min.js')?>"></script>
     <!-- Sweet Alert -->
-    <script src="<?= base_url('assets/js/sweetalert.min.js')?>"></script> 
+    <script src="<?= base_url('assets/js/sweetalert.min.js')?>"></script>
     <!-- Croppie -->
     <script src="<?= base_url('assets/js/croppie.js')?>"></script>
     <!-- Masked Input -->
-    <script src="<?= base_url('assets/js/masked-input.min.js')?>"></script> 
-    <!-- Custom JS -->
-    <script src="<?= base_url('assets/js/custom.js')?>"></script>
-    <!-- View Specific JS -->
-    <?php if (isset($script)) :?>
-    <script src="<?= base_url('assets/js/scripts/'.$script)?>"></script>
-    <?php endif;?>
-    <?php if (config_item('use_ajax')):?>
-    <!-- Logout -->
-    <script>
-    $('#logout').click( function() {
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: baseUrl+'auth/logout',
-        success: function (data) {
-          if (data.redirect) {
-            swal({
-              title: '¡Exito!',
-              text: data.msg,
-              timer: 2000,
-              type: 'success',
-              showConfirmButton: false
-              }, function () {
-                window.location.href = baseUrl;
-            });
-          } else {
-            swal('¡Error!',data.msg, data.type);
-          }
-        }
-      });
-    });  
-    </script>
-    <?php endif;?>
+    <script src="<?= base_url('assets/js/masked-input.min.js')?>"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="<?= base_url('assets/js/ie10-viewport-bug-workaround.js')?>"></script>
+    <!-- Custom JS -->
+    <script src="<?= base_url('assets/js/app.js')?>"></script>
 </body>
 
 </html>

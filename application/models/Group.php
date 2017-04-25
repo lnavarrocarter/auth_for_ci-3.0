@@ -38,13 +38,23 @@ class Group extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table = 'groups', array $data = NULL) {
+    public function read(string $table = 'groups', array $data = NULL, bool $array = FALSE) {
         if (!$data) {
             $query = $this->db->get($table);
             return $query->result();
         } else {
             $query = $this->db->get_where($table, $data);
-            return $query->row();
+            if ($query->num_rows() == 0 ) {
+                return false;
+            } elseif ($query->num_rows() == 1 ) {
+                if ($array) {
+                    return $query->result();
+                } else {
+                    return $query->row();
+                }
+            } else {
+                return $query->result();
+            }
         }
     }
 

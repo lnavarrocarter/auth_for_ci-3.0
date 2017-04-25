@@ -49,8 +49,8 @@
     <!-- Sweet Alert -->
     <script src="<?= base_url('assets/js/sweetalert.min.js')?>"></script> 
     <?php if (config_item('use_ajax')):?>
-    <!-- AJAX Calls -->
-    <script src="<?= base_url('assets/js/ajax.js')?>"></script>
+    <!-- App JS Functions -->
+    <script src="<?= base_url('assets/js/app.js')?>"></script>
     <?php endif;?>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="<?= base_url('assets/js/ie10-viewport-bug-workaround.js')?>"></script>

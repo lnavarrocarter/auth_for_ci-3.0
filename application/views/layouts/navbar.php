@@ -34,18 +34,20 @@
                     <?php endif;?>
                     <ul class="dropdown-menu">
                         <?php if ($this->session->userdata('permissions') & PERM['user']):?>
-                        <li><a href="#">Zona Usuario</a></li>
+                        <li><a href="#">Nada</a></li>
                         <?php endif;?>
                         <?php if ($this->session->userdata('permissions') & PERM['admin']):?>
-                        <li><a href="#">Zona Admin</a></li>
+                        <li><a href="<?= base_url('users')?>"><i class="fa fa-users fa-fw"></i> Administrar Usuarios</a></li>
+                        <li><a href="<?= base_url('groups/show/').$this->session->userdata('group_id');?>"><i class="fa fa-building fa-fw"></i> Administrar Grupo</a></li>
                         <?php endif;?>
                         <?php if ($this->session->userdata('permissions') & PERM['sadmin']):?>
-                        <li><a href="#">Zona Super Admin</a></li>
+                        <li><a href="<?= base_url('users')?>"><i class="fa fa-users fa-fw"></i> Administrar Usuarios</a></li>
+                        <li><a href="<?= base_url('groups')?>"><i class="fa fa-building fa-fw"></i> Administrar Grupos</a></li>
                         <?php endif;?>
                         <li role="separator" class="divider"></li>
-                        <li class="dropdown-header">Ajustes</li>
-                        <li><a href="#">Mi Cuenta</a></li>
-                        <li><a href="#" id="logout">Cerrar Sesión</a></li>
+                        <li class="dropdown-header">Mi Cuenta</li>
+                        <li><a href="<?= base_url('users/show/'.$this->session->userdata('id'))?>"><i class="fa fa-user fa-fw"></i> Mi Perfil</a></li>
+                        <li><a href="#" onclick="ajaxGet('auth/logout')"><i class="fa fa-sign-out fa-fw"></i> Cerrar Sesión</a></li>
                     </ul>
                 </li>
             </ul>

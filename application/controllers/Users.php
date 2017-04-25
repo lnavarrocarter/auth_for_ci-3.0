@@ -1,64 +1,93 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 /*
 |--------------------------------------------------------------------------
 | Controlador de Usuarios
 |--------------------------------------------------------------------------
-|
-| Este es el controlador de Usuarios de Ncai Auth.
-|
+| Este es el controlador de Usuarios de Ncai Auth, encargado de todas las 
+| operaciones con usuarios en la aplicación.
 |
 */
-
 class Users extends CI_Controller {
 
-    ###############################
-    # CONSTRUCTOR DEL CONTROLADOR #
-    ###############################
-
+    /**
+     * Carga Modelos y bloquea el acceso a usuarios no logeados.
+     * @return type
+     */
     public function __construct() {
         parent::__construct();
-        // Cargar Modelo
+        /* Cargar Modelo */
         $this->load->model('User');
-        //Middleware
+        $this->load->model('Group');
+        /* Middleware */
         $this->middleware->only_auth();
     }
-    
-    ###################################
-    # MÉTODOS BÁSICOS DEL CONTROLADOR #
-    ###################################
 
-    // Llama una vista que muestra todos los recursos
+    /**
+     * Devuelve html con una lista de todos o un grupo de usuarios
+     * @return string or json
+     */
     public function index() {
-        $this->middleware->only_permission(PERM['sadmin'],'No tienes los permisos suficientes para realizar esta acción.' ,'users/show/'.$this->session->userdata('id'));
-        $data['users'] = $query = $this->User->read();
         $data['title'] = 'Listado de Usuarios';
-        $data['description'] = 'Aquí puedes ver una lista de todos los usuarios.';
+        $data['description'] = 'Aquí puedes ver una lista de todos los usuarios en el sistema.';
+        if ($this->session->userdata('permissions') & PERM['sadmin']) {
+            $data['users'] = $this->User->read();
+        } elseif ($this->session->userdata('permissions') & PERM['admin']) {
+            $id = $this->session->userdata('group_id');
+            $data['users'] = $this->User->read('users', ['group_id' => $id], true);
+        } else {
+            redirect('users/show/'.$this->session->userdata('id'));
+        }
         $this->middleware->renderview('users/index', $data);
     }
 
-    // Llama una vista que muestra un recurso por id
+    /**
+     * Devuelve html con detalles de un usuario específico
+     * @param int $id - el id del usuario
+     * @return string or json
+     */
     public function show($id) {
         $query = $this->User->read('users', ['id' => $id]);
-        $data['user'] = $query;
+        if (!$query) {
+            $id = $this->session->userdata('id');
+            $data['user'] = $this->User->read('users', ['id' => $id]);
+        } else {
+          $data['user'] = $query;  
+        }
         $data['title'] = 'Perfil de Usuario';
         $data['description'] = 'Aquí puedes ver el perfil de Usuario';
         $this->middleware->renderview('users/show', $data);
     }
 
-    // Llama una vista con un formulario para crear un recurso nuevo
+    /**
+     * Devuelve html con formulario para crear nuevo usuario
+     * @return string or json
+     */
     public function new() {
+        $this->middleware->onlyajax();
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'], 'No tienes los permisos suficientes.');
         $data['title'] = 'Nuevo Usuario';
         $data['description'] = 'Aquí puedes crear un nuevo usuario.';
+        if ($this->session->userdata('permissions') & PERM['sadmin']) {
+            $data['groups'] = $this->Group->read();
+        } elseif ($this->session->userdata('permissions') & PERM['admin']) {
+            $id = $this->session->userdata('group_id');
+            $data['groups'] = $this->Group->read('groups', ['id' => $id]);
+        } else {
+            $data['groups'] = NULL;
+        }
         $this->middleware->renderview('users/new', $data);
     }
 
-    // Ejecuta el proceso para crear un nuevo recurso
+    /**
+     * Crea un nuevo usuario
+     * @return string or json
+     */
     public function create() {
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
-        if ($this->session->userdata('permissions') & PERM['admin']) {
-            // TODO: Crear de su propia empresa
-        }
+
         // Valido los datos
         $this->form_validation->set_rules('name1', 'nombre', 'trim|required|min_length[1]|max_length[20]');
         $this->form_validation->set_rules('lastname1', 'apellido', 'trim|required|min_length[1]|max_length[20]');
@@ -66,6 +95,7 @@ class Users extends CI_Controller {
              $this->form_validation->set_rules('username', 'nombre de usuario', 'trim|required|min_length[5]|max_length[15]|is_unique[users.username]');
         }
         $this->form_validation->set_rules('email', 'correo electrónico', 'trim|required|min_length[5]|max_length[40]|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('group_id', 'grupo', 'trim|required|min_length[1]|max_length[2]');
         $this->form_validation->set_rules('passwd', 'contraseña', 'trim|required|min_length[5]|max_length[20]');
         if(!$this->form_validation->run()) {
             $this->form_validation->set_error_delimiters('', '');
@@ -82,7 +112,9 @@ class Users extends CI_Controller {
         } else {
             $data['permissions'] = config_item('default_permissions');
         }
-        // TODO: Chequear que un usuario de menos permisos no cree uno mayor
+        if ($this->session->userdata('permissions') < $data['permissions']) {
+            $this->middleware->response('¿Pasándote de listo?','error');
+        }
         // Hasheo el Password
         if ($this->config->item('use_salt')) {
             $data['salt'] = uniqid(mt_rand(), true);
@@ -101,29 +133,55 @@ class Users extends CI_Controller {
         $data['name1'] = $this->input->post('name1');
         $data['lastname1'] = $this->input->post('lastname1');
         $data['email'] = $this->input->post('email');
+        $data['group_id'] = $this->input->post('group_id');
         // Hago la query
         $query = $this->User->create('users', $data);
         // La respuesta
         if (!$query) {
             $this->middleware->response('Imposible crear usuario. Intente más tarde.', 'error');
         } else {
-            $data['users'] = $this->User->read();
-            $this->middleware->response('Usuario creado correctamente', 'success', 'users/index', $data);
+            $this->middleware->response('Usuario creado correctamente', 'success', 'referer');
         }
     }
 
-    // Llama a una vista con un formulario para editar un recurso existente
+    /**
+     * Devuelve html con formulario para editar un usuario
+     * @param int $id 
+     * @return string or json
+     */
     public function edit($id) {
+        $this->middleware->onlyajax();
+        $this->middleware->only_permission(PERM['sadmin']|PERM['admin'], 'No tienes los permisos suficientes.');
         $data['user'] = $this->User->read('users', ['id' => $id]);
+        if ($this->session->userdata('permissions') < $data['user']->permissions) {
+            $this->middleware->response('No tienes permisos suficientes.', 'error');
+        }
         $data['title'] = 'Editar Usuario';
         $data['description'] = 'Aquí puedes editar un nuevo usuario.';
+        if ($this->session->userdata('permissions') & PERM['sadmin']) {
+            $data['groups'] = $this->Group->read();
+        } elseif ($this->session->userdata('permissions') & PERM['admin']) {
+            $id = $this->session->userdata('group_id');
+            $data['groups'] = $this->Group->read('groups', ['id' => $id]);
+        }
         $this->middleware->renderview('users/edit', $data);
     }
 
-    // Ejecuta el proceso para editar un recurso existente
+    /**
+     * Actualiza un usuario
+     * @param int $id 
+     * @return string or json
+     */
     public function update($id) {
-        // TODO: Agregar los nuevos campos del edit al formulario
+        // Validaciones: AJAX, Permisos, Grupos y Formulario.
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
+        $query = $this->User->read('users', ['id' => $id]);
+        if ($this->session->userdata('permissions') < $query->permissions) {
+            $this->middleware->response('No puedes editar un usuario de más privilegios que tú.', 'error');
+        } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
+            $this->middleware->response('No puedes editar un usuario que no pertenece a tu grupo.', 'error');
+        }
         // Valido los datos
         $this->form_validation->set_rules('name1', 'nombre', 'trim|required|min_length[1]|max_length[20]');
         $this->form_validation->set_rules('lastname1', 'apellido', 'trim|required|min_length[1]|max_length[20]');
@@ -152,42 +210,53 @@ class Users extends CI_Controller {
              $data['phone'] = $this->input->post('phone');
         }
         $this->form_validation->set_rules('email', 'correo electrónico', 'trim|required|min_length[5]|max_length[40]|valid_email');
+        $this->form_validation->set_rules('group_id', 'grupo', 'trim|required|min_length[1]|max_length[2]');
         if(!$this->form_validation->run()) {
             $this->form_validation->set_error_delimiters('', '');
             $this->middleware->response(validation_errors(), 'error');
-        }
-        // Ajusto el valor de los permisos
-        if ($this->input->post('permissions')) {
-            $permissions = 0;
-            foreach ($this->input->post('permissions') as $key => $val) {
-                (int)$val;
-                $permissions += $val;
-            }
-            $data['permissions'] = $permissions;
         } else {
-            $data['permissions'] = config_item('default_permissions');
-        }
-        // TODO: Chequear que un usuario de menos permisos no edite uno mayor
-        $data['name1'] = $this->input->post('name1');
-        $data['lastname1'] = $this->input->post('lastname1');
-        $data['email'] = $this->input->post('email');
-        $query = $this->User->update('users', $data, ['id' => $id]);
-        if (!$query) {
-            $this->middleware->response('Imposible actualizar los datos. Intente más tarde.', 'error');
-        } else {
-            if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                $data['user'] = $this->User->read('users', ['id' => $id]);
-                $this->middleware->response('Usuario actualizado correctamente', 'success', 'users/show', $data); 
+            // Ajusto el valor de los permisos
+            if ($this->input->post('permissions')) {
+                $permissions = 0;
+                foreach ($this->input->post('permissions') as $key => $val) {
+                    (int)$val;
+                    $permissions += $val;
+                }
+                $data['permissions'] = $permissions;
             } else {
-                $data['users'] = $this->User->read();
-                $this->middleware->response('Usuario actualizado correctamente', 'success', 'users/index', $data);
+                $data['permissions'] = config_item('default_permissions');
+            }
+            if ($this->session->userdata('permissions') < $data['permissions']) {
+                $this->middleware->response('¿Pasándote de listo?','error');
+            }
+            // TODO: Chequear que un usuario de menos permisos no edite uno mayor
+            $data['name1'] = $this->input->post('name1');
+            $data['lastname1'] = $this->input->post('lastname1');
+            $data['email'] = $this->input->post('email');
+            $data['group_id'] = $this->input->post('group_id');
+            $query = $this->User->update('users', $data, ['id' => $id]);
+            if (!$query) {
+                $this->middleware->response('Imposible actualizar los datos. Intente más tarde.', 'error');
+            } else {
+                $this->middleware->response('Usuario actualizado correctamente.', 'success', 'referer');
             }
         }
     }
 
-    // Ejecuta el proceso para borrar un recurso existente
+    /**
+     * Destruye un usuario
+     * @param int $id 
+     * @return string or json
+     */
     public function destroy($id) {
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
+        $query = $this->User->read('users', ['id' => $id]);
+        if ($this->session->userdata('permissions') < $query->permissions) {
+            $this->middleware->response('No puedes eliminar un usuario de más privilegios que tú.', 'error');
+        } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
+            $this->middleware->response('No puedes eliminar un usuario que no pertenece a tu grupo.', 'error');
+        }
         // Que no se bloquee a sí mismo
         if ($this->session->userdata('id') == $id) {
             $this->middleware->response('No puedes eliminar tu propio usuario', 'error');
@@ -196,62 +265,77 @@ class Users extends CI_Controller {
         if (!$query) {
             $this->middleware->response('Imposible eliminar el usuario. Intente más tarde.', 'error');
         } else {
-            if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                $data['user'] = $this->User->read('users', ['id' => $id]);
-                $this->middleware->response('Usuario eliminado correctamente', 'success', 'users/show', $data); 
-            } else {
-                $data['users'] = $this->User->read();
-                $this->middleware->response('Usuario eliminado correctamente', 'success', 'users/index', $data);
-            }
+            $this->middleware->response('Usuario eliminado correctamente.', 'success', 'referer');
         }
     }
 
-    #######################################
-    # MÉTODOS ESPECÍFICOS DEL CONTROLADOR #
-    #######################################
+ /*
+ |--------------------------------------------------------------------------
+ | USUARIOS - Métodos Específicos
+ |--------------------------------------------------------------------------
+ | Estos métodos específicos son propios de la clase y se alejan del CRUD
+ | básico. Por ejemplo, existe la opción para bloquear o desbloquear un 
+ | usuario, cambiar la contraseña, o cambiar su foto de perfil de un usuario.
+ |
+ */
 
-    // Bloquea un usuario
+    /**
+     * Bloquea un usuario
+     * @param int $id 
+     * @return string or json
+     */
     public function lock($id) {
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
         // Que no se bloquee a sí mismo
         if ($this->session->userdata('id') == $id) {
             $this->middleware->response('No puedes bloquear tu propio usuario.', 'error');
+        }
+        $query = $this->User->read('users', ['id' => $id]);
+        if ($this->session->userdata('permissions') < $query->permissions) {
+            $this->middleware->response('No puedes bloquear un usuario de más privilegios que tú.', 'error');
+        } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
+            $this->middleware->response('No puedes bloquear un usuario que no pertenece a tu grupo.', 'error');
         }
         $data['is_locked'] = 1;
         $query = $this->User->update('users', $data, ['id' => $id]);
         if (!$query) {
             $this->middleware->response('Imposible bloquear el usuario. Intente más tarde.', 'error');
         } else {
-            if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                $data['user'] = $this->User->read('users', ['id' => $id]);
-                $this->middleware->response('Usuario bloqueado correctamente', 'success', 'users/show', $data); 
-            } else {
-                $data['users'] = $this->User->read();
-                $this->middleware->response('Usuario bloqueado correctamente', 'success', 'users/index', $data);
-            }
+            $this->middleware->response('Usuario bloqueado correctamente.', 'success', 'referer');
         }
     }
 
-    // Desbloquea un usuario
+    /**
+     * Desbloquea un usuario
+     * @param int $id 
+     * @return string or json
+     */
     public function unlock($id) {
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
+        $query = $this->User->read('users', ['id' => $id]);
+        if ($this->session->userdata('permissions') < $query->permissions) {
+            $this->middleware->response('No puedes desbloquear un usuario de más privilegios que tú.', 'error');
+        } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
+            $this->middleware->response('No puedes desbloquear un usuario que no pertenece a tu grupo.', 'error');
+        }
         $data['is_locked'] = 0;
         $query = $this->User->update('users', $data, ['id' => $id]);
         if (!$query) {
             $this->middleware->response('Imposible desbloquar el usuario. Intente más tarde.', 'error');
         } else {
-            if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                $data['user'] = $this->User->read('users', ['id' => $id]);
-                $this->middleware->response('Usuario desbloqueado correctamente', 'success', 'users/show', $data);
-            } else {
-                $data['users'] = $this->User->read();
-                $this->middleware->response('Usuario desbloqueado correctamente', 'success', 'users/index', $data);
-            }
+            $this->middleware->response('Usuario desbloqueado correctamente.', 'success', 'referer');
         }
     }
 
-    // Reset Password
+    /**
+     * Resetea una contraseña por email
+     * @param type $id 
+     * @return string or json
+     */
     public function passwd_reset($id) {
+        $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
         // Que no se bloquee a sí mismo
         if ($this->session->userdata('id') == $id) {
@@ -286,20 +370,19 @@ class Users extends CI_Controller {
                 $this->middleware->response($msg, 'error');
             // Si se envía bien, terminamos el proceso con un mensaje de confirmación.
             } else {
-                $msg = 'Hemos envíado un correo electrónico con un enlace al usuario seleccionado para que pueda elegir una nueva conraseña. No olvides comentarle que revise su carpeta de spam.';
-                if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                    $data['user'] = $this->User->read('users', ['id' => $id]);
-                    $this->middleware->response($msg, 'success', 'users/show', $data); 
-                } else {
-                    $data['users'] = $this->User->read();
-                    $this->middleware->response($msg, 'success', 'users/index', $data);
-                }
+                $msg = 'Hemos envíado un correo electrónico con un enlace al usuario seleccionado para que pueda elegir una nueva contraseña. No olvides comentarle que revise su carpeta de spam.';
+                $this->middleware->response($msg, 'success');
             }
         }
     }
 
-    // Password Change
+    /**
+     * Cambia la contraseña de un usuario
+     * @param int $id 
+     * @return html o json
+     */
     public function passwd_change($id) {
+        $this->middleware->onlyajax();
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
             // Cargar la vista
             $data['user'] = $this->User->read('users', ['id' => $id]);
@@ -343,13 +426,7 @@ class Users extends CI_Controller {
                 if (!$query) {
                     $this->middleware->response('Imposible cambiar la contraseña. Intente más tarde.', 'error');
                 } else {
-                    if (strpos($_SERVER['HTTP_REFERER'], 'show') !== false) {
-                        $data['user'] = $this->User->read('users', ['id' => $id]);
-                        $this->middleware->response('Contraseña cambiada exitosamente.', 'success', 'users/show', $data); 
-                    } else {
-                        $data['users'] = $this->User->read();
-                        $this->middleware->response('Contraseña cambiada exitosamente.', 'success', 'users/index', $data);
-                    }
+                    $this->middleware->response('Contraseña cambiada exitosamente.', 'success', 'referer');
                 }
             }
         } else {
@@ -357,7 +434,11 @@ class Users extends CI_Controller {
         }
     }
 
-    // Cambia la imagen de perfil de un usuario
+    /**
+     * Cambia la imagen de perfil de un usuario
+     * @param type $id 
+     * @return type
+     */
     public function change_profile_img($id) {
         // TODO: Mejorar respuesta del método de cambio de imagen.
         $this->middleware->onlyajax();

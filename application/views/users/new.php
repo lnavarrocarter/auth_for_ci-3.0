@@ -21,10 +21,26 @@
             <?php endforeach;?>
         </select>
     </div>
+    <?php if (is_array($groups)): ?>
+    <div class="form-group">
+        <select name="group_id" class="form-control">
+            <option value="" disabled selected>Elige un Grupo</option>
+            <?php foreach ($groups as $group): ?>
+            <option value="<?= $group->id ?>"><?= $group->name?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <?php else:?>
+    <div class="form-group">
+        <select name="group_id" class="form-control">
+            <option value="<?= $groups->id ?>"><?= $groups->name?></option>
+        </select>
+    </div>
+    <?php endif;?>
     <div class="form-group">
         <input type="text" name="passwd" class="form-control" placeholder="Contraseña temporal" required>
     </div>
     <div class="form-group">
-        <input type="submit" class="btn btn-success" value="Crear">
+        <button id="submit" type="submit" class="btn btn-lg btn-success">Crear</button>
     </div>
 </form>

@@ -26,6 +26,25 @@
             <?php endforeach;?>
         </select>
     </div>
+    <?php if (is_array($groups)): ?>
+    <div class="form-group">
+        <select name="group_id" class="form-control">
+            <?php foreach ($groups as $group): ?>
+            <?php if ($group->id == $user->group_id):?>
+            <option selected value="<?= $group->id ?>"><?= $group->name?></option>
+            <?php else :?>
+            <option value="<?= $group->id ?>"><?= $group->name?></option>
+            <?php endif;?>
+            <?php endforeach;?>
+        </select>
+    </div>
+    <?php else:?>
+    <div class="form-group">
+        <select name="group_id" class="form-control">
+            <option value="<?= $groups->id ?>"><?= $groups->name?></option>
+        </select>
+    </div>
+    <?php endif;?>
     <?php if (config_item('user_birthdate')):?>
     <div class="form-group">
         <input type="date" name="birthdate" class="form-control" value="<?= $user->birthdate ?>" placeholder="Fecha de Nacimiento">
@@ -34,8 +53,17 @@
     <?php if (config_item('user_gender')):?>
     <div class="form-group">
         <select name="gender" class="form-control" value="<?= $user->gender ?>" placeholder="Sexo">
+            <?php if ($user->gender == 1):?>
+            <option selected value="1">Masculino</option>
+            <option value="2">Femenino</option>
+            <?php elseif ($user->gender == 2):?>
+            <option value="1">Masculino</option>
+            <option selected value="2">Femenino</option>
+            <?php else:?>
+            <option selected disabled value="0">Elige Sexo</option> 
             <option value="1">Masculino</option>
             <option value="2">Femenino</option>
+            <?php endif;?>
         </select>
     </div>
     <?php endif;?>
@@ -53,6 +81,6 @@
     </div>
     <?php endif;?>
     <div class="form-group">
-        <input type="submit" class="btn btn-success" value="Editar">
+        <button id="submit" type="submit" class="btn btn-lg btn-primary">Editar</button>
     </div>
 </form>

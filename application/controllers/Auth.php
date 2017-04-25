@@ -52,6 +52,7 @@ class Auth extends CI_Controller {
         }
         // Cargar Modelos
         $this->load->model('User');
+        $this->load->model('Group');
         $this->load->model('LoginAttempt');
         // Autoinstalar la base de
         if ($this->config->item('auto_install_db') && !$this->db->table_exists('users')) {
@@ -168,6 +169,11 @@ class Auth extends CI_Controller {
                             $msg = 'Tu usuario se encuentra bloqueado. Ponte en contacto con un administrador de sistema para desbloquearlo.';
                             $this->middleware->response($msg, 'error');
                         }
+                        // Chequea si el grupo está bloqueado
+                        if (!$this->Group->read('groups', ['id' => $query->group_id])->is_active) {
+                            $msg = 'Tu grupo tiene su cuenta suspendida, por lo que no puedes iniciar sesión. Ponte en contacto con el administrador de sistema.';
+                            $this->middleware->response($msg, 'error');
+                        }
                         // Chequea si el usuario está activo.
                         if (!$query->is_active) {                            
                             $timediff = $query->blocked_time + $this->config->item('blocking_time');
@@ -272,7 +278,7 @@ class Auth extends CI_Controller {
             $data = ['id', 'avatar', 'name1', 'lastname1', 'email', 'username', 'permissions', 'lastlogin_ip', 'lastlogin_time', 'logged_in'];
             $this->session->unset_userdata($data);;
             $msg = 'Has cerrado sesión exitosamente.';
-            $this->middleware->response($msg, 'success', base_url());
+            $this->middleware->response($msg, 'success', 'auth');
         }
     }
 

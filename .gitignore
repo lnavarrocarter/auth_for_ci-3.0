@@ -1,7 +1,7 @@
 /system/*
 /.phpintel/*
-.htaccess
-index.php
+/.htaccess
+/index.php
 *.sublime*
 /application/hooks/*
 /application/config/*

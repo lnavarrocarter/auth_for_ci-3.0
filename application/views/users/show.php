@@ -1,5 +1,15 @@
 <div class="container">
     <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1><?= $title ?></h1>
+            </div>
+            <p class="lead"><?=$description?></p>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <?php if ($user->is_locked):?>
             <div class="panel panel-danger">
@@ -31,6 +41,10 @@
                         <div class="col-sm-8">
                             <table class="table">
                                 <tbody>
+                                    <tr>
+                                        <td>Grupo:</td>
+                                        <td><?= $user->group_name ?></td>
+                                    </tr>
                                     <tr>
                                         <td>Fecha de Nacimiento:</td>
                                         <td><?php if ($user->birthdate) { echo strftime('%d/%m/%y', $user->birthdate).' ('.timespan($user->birthdate, time(), 1).')'; } else { echo 'No Definido'; } ?></td>
@@ -77,51 +91,25 @@
                 <button style="display: none;" id="btnSave" data-toggle="tooltip" data-original-title="Guardar" data-id="<?= $user->id ?>" class="btn btn-success btn-sm"><i class="fa fa-save fa-fw"></i></button>
                 <button style="display: none;" id="btnCancel" data-toggle="tooltip" data-original-title="Cancelar" class="btn btn-danger btn-sm"><i class="fa fa-ban fa-fw"></i></button>
                 <span class="pull-right">
-                    <a edit <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/edit/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Editar este usuario" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary">
-                        <i class="fa fa-edit fa-fw"></i>
-                    </a>
+                    <button onclick="openModal('users/edit/<?=$user->id?>?id=usersShow', 'Editar Usuario')" class="btn btn-sm btn-primary edit" data-toggle="tooltip" title="Editar" data-placement="top"><i class="fa fa-fw fa-pencil"></i></button>
                     <?php if ($this->session->userdata('id') == $user->id):?>
-                        <a passwd-ch <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/passwd_change/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Cambiar contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
+                        <button onclick="openModal('users/passwd_change/<?=$user->id?>?id=usersShow', 'Cambiar Contraseña')" data-original-title="Cambiar contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
                             <i class="fa fa-key fa-fw"></i>
-                        </a>
+                        </button>
                     <?php else:?>
-                        <a passwd-rst <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/passwd_reset/'.$user->id)?>"<?php endif;?> data-id="<?= $user->id ?>" data-original-title="Reestablecer contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
+                        <button onclick="ajaxConfirm('users/passwd_reset/<?=$user->id?>?id=usersShow', 'Enviaremos un correo electrónico al usuario con instrucciones para reestablecer su contraseña.')" data-original-title="Reestablecer contraseña" data-toggle="tooltip" type="button" class="btn btn-sm btn-info">
                             <i class="fa fa-key fa-fw"></i>
-                        </a>
+                        </button>
                     <?php endif;?>
-                    <?php if ($user->is_locked): ?>
-                    <a unlock <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/unlock/'.$user->id)?>"<?php endif;?> data-original-title="Bloquear este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
-                        <i class="fa fa-unlock fa-fw"></i>
-                    </a>
-                    <?php else :?>
-                    <a lock <?php if (!config_item('use_ajax')):?> href="<?= base_url('users/lock/'.$user->id)?>"<?php endif;?> data-original-title="Bloquear este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning">
-                        <i class="fa fa-lock fa-fw"></i>
-                    </a>
+                    <?php if (!$user->is_locked):?>
+                    <button onclick="ajaxGet('users/lock/<?=$user->id?>?id=usersShow')" data-original-title="Bloquear" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="fa fa-lock fa-fw"></i></button>
+                    <?php else:?>
+                    <button onclick="ajaxGet('users/unlock/<?=$user->id?>?id=usersShow')" data-original-title="Desbloquear" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="fa fa-unlock fa-fw"></i></button>
                     <?php endif;?>
-                    <a delete <?php if (!config_item( 'use_ajax')):?> href="<?= base_url('users/destroy/'.$user->id)?>"<?php endif;?> data-original-title="Eliminar este usuario" data-id="<?= $user->id ?>" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger">
-                        <i class="fa fa-trash fa-fw"></i>
-                    </a>
-            </span>
+                    <button onclick="ajaxConfirm('users/destroy/<?=$user->id?>?id=usersShow')" data-original-title="Eliminar" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash fa-fw"></i></button>
+                </span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- INICIO: Modal Editar Usuario -->
-<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-id>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content text-center">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Editar Usuario</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1" id="contentEditUser">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- FIN: Modal Editar Usuario -->

@@ -11,7 +11,7 @@
         <label for="remember" value="1"> Recordarme</label>
     </div>
     <div class="form-group">
-        <button type="submit" type="submit" class="btn btn-lg btn-default">Entrar</button>
+        <button type="submit" class="btn btn-lg btn-default">Entrar</button>
     </div>
     <?php if (config_item('password_reset')):?>
     <p><a href="<?= base_url('auth/password_reset')?>">¿Olvidaste tu contraseña?</a></p>
