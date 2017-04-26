@@ -13,23 +13,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 |
 */
-
 class Group extends CI_Model {
 
-    ##########################
-    # CONSTRUCTOR DEL MODELO #
-    ##########################
-
+    /**
+     * Constructor del Modelo
+     * @return type
+     */
     public function __construct() {
         parent::__construct();
 
     }
     
-    ##############################
-    # MÉTODOS BÁSICOS DEL MODELO #
-    ##############################
-
-    // Crea una entrada en la base de datos
     public function create(string $table = 'groups', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
