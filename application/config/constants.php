@@ -88,25 +88,31 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 |--------------------------------------------------------------------------
 | Definición de Constantes para el Sistema de Permisos
 |--------------------------------------------------------------------------
-|
+| TODO: Translate constants definition
 | These are used to assign permissions or different levels of privileges
 | to the different users in a programmatic way, instead of query
 | another database table. You define them here and then, when you're
 | creating a user, store multiple permissions using the | bitwise operator:
 | 
-| $permissions = USER|ADMIN|SADMIN
+| $permissions = PERM[user]|PERM[admin]|PERM[sadmin]
 |
 | Then save that value in the db, and when retrieved, will be in binary.
 | You would be able to read it and check it with:
 |
-| <?php if ($this->session->userdata('permissions') & USER):?>
+| <?php if ($this->session->userdata('permissions') & PERM[user]):?>
 |
 | That would pass the "if" if the user belongs to the user group.
 |
-| NOTE: Added by Matías Navarro
-|
 |
 */
-defined('USER')     OR define('USER', 1);       // User
-defined('ADMIN')    OR define('ADMIN', 2);      // Admin
-defined('SADMIN')   OR define('SADMIN', 4);     // Super Admin
+defined('PERM')     OR define('PERM', [
+    'user' => 1,
+    'admin' => 2,
+    'sadmin' => 4
+]);
+
+defined('PERMT')     OR define('PERMT', [
+    1 => 'Usuario',
+    2 => 'Administrador',
+    4 => 'Super Administrador'
+]);

@@ -26,11 +26,6 @@ class Migration_Add_Auth extends CI_Migration {
                                 'type' => 'VARCHAR',
                                 'constraint' => '100'
                         ),
-                        'phone' => array(
-                                'type' => 'VARCHAR',
-                                'constraint' => '30',
-                                'null' => TRUE
-                        ),
                         'password' => array(
                                 'type' => 'VARCHAR',
                                 'constraint' => '150',
@@ -60,6 +55,43 @@ class Migration_Add_Auth extends CI_Migration {
                                 'constraint' => '30',
                                 'null' => TRUE,
                         ),
+                        'mobile' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '30',
+                                'null' => TRUE
+                        ),
+                        'phone' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '30',
+                                'null' => TRUE
+                        ),
+                        'birthdate' => array(
+                                'type' => 'INT',
+                                'constraint' => '11',
+                                'unsigned' => TRUE,
+                                'null' => TRUE,
+                        ),
+                        'gender' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                        'location' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '100',
+                                'null' => TRUE,
+                        ),
+                        'avatar_url' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '100',
+                                'null' => TRUE,
+                        ),
+                        'group_id' => array(
+                                'type' => 'INT',
+                                'constraint' => 11,
+                                'null' => TRUE,
+                        ),
                         'permissions' => array(
                                 'type' => 'INT',
                                 'constraint' => 11,
@@ -75,7 +107,19 @@ class Migration_Add_Auth extends CI_Migration {
                                 'constraint' => '60',
                                 'null' => TRUE
                         ),
+                        'needs_passwd_change' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
                         'is_active' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                        'is_locked' => array(
                                 'type' => 'TINYINT',
                                 'constraint' => '1',
                                 'unsigned' => TRUE,
@@ -160,10 +204,70 @@ class Migration_Add_Auth extends CI_Migration {
                 ));
                 $this->dbforge->add_key('id', TRUE);
                 $this->dbforge->create_table('login_attempts');
+
+                ###############
+                # GROUP TABLE #
+                ###############
+
+                $this->dbforge->add_field(array(
+                        'id' => array(
+                                'type' => 'INT',
+                                'constraint' => '11',
+                                'unsigned' => TRUE,
+                                'auto_increment' => TRUE
+                        ),
+                        'name' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '30',
+                                'null' => TRUE,
+                        ),
+                        'email' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '50',
+                                'null' => TRUE,
+                        ),
+                        'max_members' => array(
+                                'type' => 'INT',
+                                'constraint' => 11,
+                                'null' => TRUE,
+                        ),
+                        'token' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '50',
+                                'null' => TRUE,
+                        ),
+                        'logo_url' => array(
+                                'type' => 'VARCHAR',
+                                'constraint' => '200',
+                                'null' => TRUE,
+                        ),
+                        'is_active' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                        'created_at' => array(
+                                'type' => 'INT',
+                                'constraint' => '11',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                        'edited_at' => array(
+                                'type' => 'INT',
+                                'constraint' => '11',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
+                ));
+                $this->dbforge->add_key('id', TRUE);
+                $this->dbforge->add_key('token');
+                $this->dbforge->create_table('groups');
         }
 
         public function down() {
                 $this->dbforge->drop_table('users');
                 $this->dbforge->drop_table('login_attempts');
+                $this->dbforge->drop_table('groups');
         }
 }

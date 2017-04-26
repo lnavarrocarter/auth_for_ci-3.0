@@ -1,7 +1,7 @@
 /system/*
 /.phpintel/*
-.htaccess
-index.php
+/.htaccess
+/index.php
 *.sublime*
 /application/hooks/*
 /application/config/*
@@ -16,7 +16,6 @@ index.php
 /application/cache/*
 /application/core/*
 /application/data/*
-/application/helpers/*
 /application/language/english/*
 /application/logs/*
 /application/middlewares/*
@@ -25,3 +24,5 @@ index.php
 /application/views/errors/*
 /application/views/user/*
 /.vscode/*
+/assets/img/profile/*
+!user_default.jpg

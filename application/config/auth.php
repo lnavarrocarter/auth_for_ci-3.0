@@ -16,14 +16,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // Opciones Generales
 $config['auto_install_db'] = true;          // Auto-instalar la estructura de la base de datos.
 $config['use_ajax'] = true;                 // Usar AJAX para las llamadas. !!Experimental
+$config['group_table'] = 'group';           // Nombre de la tabla de grupos 
 
 // Opciones de Usuario
 $config['activate_plan_module'] = false;    // Módulo de plan. TODO
 $config['plan_default_value'] = 0;          // 0 es sin plan. TODO
+$config['user_location'] = true;            // 
+$config['user_birthdate'] = true;           // 
+$config['user_gender'] = true;              // 
+$config['user_phone'] = true;               // 
 
 // Opciones de Inicio de Sesión
 $config['smart_redirect'] = true;           // Activa redireccionamiento inteligente. Ver Wiki para configurar.
-$config['logged_in_controller'] = 'app';    // El controlador donde el sistema de login redirecciona
+$config['logged_in_controller'] = 'users';  // El controlador donde el sistema de login redirecciona
 
 // Opciones de Registro
 $config['activate_registration'] = true;    // Activar el registro de usuarios
@@ -31,13 +36,13 @@ $config['register_with_name'] = false;      // Pedir el nombre en el registro
 $config['register_with_username'] = false;  // Pedir un nombre de usuario en el registro
 $config['register_with_terms'] = true;      // Pedir aceptar los términos de servicio en el registro
 $config['activation_email'] = false;        // Envía un email de confirmación para el registro.
-$config['default_permissions'] = USER;      // Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
+$config['default_permissions'] = PERM['user'];// Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
 $config['send_welcome_email'] = false;      // Depende de activation email.
 
 // Opciones de Seguridad
 $config['use_salt'] = true;                 // Encriptar las contraseñas con un salt aleatoreo.
 $config['save_last_login'] = true;          // Guardar último login en la base de datos y notificar al usuario.
-$config['csrf_protection'] = true;         // Proteger los formularios de CSRF con un token.
+$config['csrf_protection'] = true;          // Proteger los formularios de CSRF con un token.
 $config['hidden_login'] = false;            // Ocultar el botón de iniciar sesión
 $config['save_failed_attempt'] = true;      // Llevar un registro de los intentos de login fallidos.
 $config['attempts_to_block'] = 4;           // Número de intentos fallidos antes de bloquear la cuenta. 0 desactiva el bloqueo.
@@ -57,7 +62,7 @@ $config['password_reset'] = true;           // Activa la opción de recuperar cl
 $config['app_name'] = 'Ncai Auth System for CI';
 $config['app_motto'] = 'Te ahorramos el trabajo pesado.';
 $config['company_address'] = 'Huérfanos 1055, Oficina 503. Santiago, Chile.';
-$config['app_url'] = base_url();
+$config['app_url'] = '';
 $config['email_body_background_color'] = '#FFFFFF';
 $config['email_body_font_color'] = '#4E4E4E';
 $config['email_header_background_color'] = '#F2F2F2';

@@ -30,7 +30,7 @@ class User extends CI_Model {
     ##############################
 
     // Crea una entrada en la base de datos
-    public function create(string $table, array $data) {
+    public function create(string $table = 'users', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
         $query = $this->db->insert($table, $data);
@@ -38,25 +38,44 @@ class User extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table, array $data = NULL) {
+    public function read(string $table = 'users', array $data = NULL, bool $array = false) {
         if (!$data) {
-            $query = $this->db->get($table);
+            $this->db->select('users.*, groups.name as group_name');
+            $this->db->from($table);
+            $this->db->join('groups', 'groups.id = users.group_id');
+            $query = $this->db->get();
             return $query->result();
         } else {
-            $query = $this->db->get_where($table, $data);
-            return $query->row();
+            $this->db->select('users.*, groups.name as group_name');
+            $this->db->from($table);
+            $this->db->join('groups', 'groups.id = users.group_id');
+            foreach ($data as $key => $val) {
+                $this->db->where($table.'.'.$key, $val);
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() == 0 ) {
+                return false; 
+            } elseif ($query->num_rows() == 1 ) {
+                if ($array) {
+                    return $query->result();
+                } else {
+                    return $query->row();
+                }
+            } else {
+                return $query->result();
+            }
         }
     }
 
     // Actualiza una entrada en la base de datos
-    public function update(string $table, array $data, array $where) {
+    public function update(string $table = 'users', array $data, array $where) {
         $data['edited_at'] = time();
         $query = $this->db->update($table, $data, $where);
         return $query;
     }
 
     // Elimina una entrada en la base de datos
-    public function delete($table, array $where) {     
+    public function delete($table = 'users', array $where) {     
         $query = $this->db->delete($table, $where);
         return $query;
     }
