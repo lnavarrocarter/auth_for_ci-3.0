@@ -454,4 +454,11 @@ class Users extends CI_Controller {
         file_put_contents('assets/img/profile/'.$imageName, $data);
     }
 
+    public function json() {
+        $data['msg'] = 'No pude hacer esto';
+        $data['type'] = 'error';
+        echo json_encode($data);
+        die;
+    }
+
 }

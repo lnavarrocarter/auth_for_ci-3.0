@@ -22,7 +22,6 @@
 /application/templates/*
 /application/third_party/*
 /application/views/errors/*
-/application/views/user/*
 /.vscode/*
 /assets/img/profile/*
 !user_default.jpg

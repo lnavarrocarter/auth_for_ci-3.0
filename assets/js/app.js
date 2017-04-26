@@ -31,6 +31,7 @@ function openModal(url, title) {
         method: 'get',
         dataType: 'json',
         success: function(data) {
+            console.log(data);
             if (data.html) {
                 $('#baseModal').modal();
                 $('#modalContent').html(data.html);
