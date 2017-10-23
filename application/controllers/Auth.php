@@ -3,10 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
-| Sistema de Login de Ncai SpA
+| Sistema de Login de Luis Navarro
 |--------------------------------------------------------------------------
 |
-| Este es el controlador para el sistema de Login desarrollado por Ncai SpA.
+| Este es el controlador para el sistema de Login desarrollado por Luis Navarro.
 | No tiene la estructura propia de un controlador RESTful, porque este 
 | controlador no representa un recurso, sino un conjunto de métodos y acciones
 | que validan usuarios tanto para iniciar sesión como para cerrarla, recuperar
@@ -18,8 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | extra en una tabla aparte. Aunque, si te sientes capaz de no romper nada,
 | tienes libertad para modificar lo que quieras.
 |
-| Autor: Matías Navarro Carter
-| Email: mnavarrocarter@gmail.com
+| Autor: Luis Navarro Youtouch
+| Email: lnavarro.carter@gmail.com
 | Licencia: MIT
 |
 |
@@ -57,7 +57,7 @@ class Auth extends CI_Controller {
         // Autoinstalar la base de
         if ($this->config->item('auto_install_db') && !$this->db->table_exists('users')) {
             $this->load->library("migration");
-            $this->migration->version(1);
+            $this->migration->version(2);
         }
     }
 

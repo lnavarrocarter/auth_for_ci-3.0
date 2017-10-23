@@ -125,6 +125,12 @@ class Migration_Add_Auth extends CI_Migration {
                                 'unsigned' => TRUE,
                                 'null' => TRUE
                         ),
+                        'is_deleted' => array(
+                                'type' => 'TINYINT',
+                                'constraint' => '1',
+                                'unsigned' => TRUE,
+                                'null' => TRUE
+                        ),
                         'blocked_time' => array(
                                 'type' => 'INT',
                                 'constraint' => '11',
