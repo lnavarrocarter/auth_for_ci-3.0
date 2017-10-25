@@ -51,12 +51,12 @@ class Groups extends CI_Controller {
         if (!$data['group']) {
             $data['group'] = $this->Group->read('groups', ['id' => $user_group_id]);;
         }
-        $data['users'] = $this->User->read('users', ['group_id' => $id], true);
+        $data['users'] = $this->User->read('users', ['users.group_id' => $id],null,null, true);
         if (!$data['users']) {
             $data['users'] = [];
         }
         $data['title'] = $data['group']->name;
-        $data['description'] = 'Aquí puedes ver todos los detalles de este grupo.';
+        $data['description'] = 'Aquí puedes ver todos los detalles de esta empresa.';
         $this->middleware->renderview('groups/show', $data);
     }
 

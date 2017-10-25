@@ -42,7 +42,7 @@
                             <table class="table">
                                 <tbody>
                                     <tr>
-                                        <td>Grupo:</td>
+                                        <td>Empresa:</td>
                                         <td><?= $user->group_name ?></td>
                                     </tr>
                                     <tr>

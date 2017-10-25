@@ -15,7 +15,7 @@
         <div class="col-md-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 style="color:#FFF">Detalles del Grupo</h3></div>
+                    <h3 style="color:#FFF">Detalles de la Empresa</h3></div>
                 <div class="panel-body"></div>
             </div>
             <table id="dataTable" class="table table-hover table-bordered">

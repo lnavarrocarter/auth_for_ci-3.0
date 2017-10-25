@@ -32,12 +32,12 @@ $config['logged_in_controller'] = 'users';  // El controlador donde el sistema d
 
 // Opciones de Registro
 $config['activate_registration'] = true;    // Activar el registro de usuarios
-$config['register_with_name'] = false;      // Pedir el nombre en el registro
+$config['register_with_name'] = true;      // Pedir el nombre en el registro
 $config['register_with_username'] = false;  // Pedir un nombre de usuario en el registro
 $config['register_with_terms'] = true;      // Pedir aceptar los términos de servicio en el registro
-$config['activation_email'] = false;        // Envía un email de confirmación para el registro.
+$config['activation_email'] = true;        // Envía un email de confirmación para el registro.
 $config['default_permissions'] = PERM['user'];// Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
-$config['send_welcome_email'] = false;      // Depende de activation email.
+$config['send_welcome_email'] = true;      // Depende de activation email.
 
 // Opciones de Seguridad
 $config['use_salt'] = true;                 // Encriptar las contraseñas con un salt aleatoreo.

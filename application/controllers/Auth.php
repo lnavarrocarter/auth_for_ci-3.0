@@ -90,11 +90,12 @@ class Auth extends CI_Controller {
                 // Si trae un activation code, se manda a validarlo.
                 if ($this->input->get('activate')) {
                     // Se pregunta a la db por un usuario con el codigo de activación enviado
-                    $query = $this->User->read('users', ['activation_code' => $this->input->get('activate')]);
+                    $query = $this->User->read('users', ['users.activation_code' => $this->input->get('activate')]);
                     // Si la query falla, se manda un mensaje de error
                     if (!$query) {
                         $this->session->set_flashdata('error', 'Código de activación inválido o inexistente.');
-                        redirect('auth/login');
+                        //$this->output->enable_profiler(TRUE);
+                        //redirect('auth/login');
                     // Si la query es exitosa, entonces se elimina el codigo de activación y se activa el usuario.
                     } else {
                         if (!$this->activate_user($query->id)) {
@@ -169,10 +170,13 @@ class Auth extends CI_Controller {
                             $msg = 'Tu usuario se encuentra bloqueado. Ponte en contacto con un administrador de sistema para desbloquearlo.';
                             $this->middleware->response($msg, 'error');
                         }
+                        //verifica si el usuario es superadmin
+                        if(!$this->session->userdata('permissions') & PERM['sadmin']){
                         // Chequea si el grupo está bloqueado
-                        if (!$this->Group->read('groups', ['id' => $query->group_id])->is_active) {
-                            $msg = 'Tu grupo tiene su cuenta suspendida, por lo que no puedes iniciar sesión. Ponte en contacto con el administrador de sistema.';
-                            $this->middleware->response($msg, 'error');
+                            if (!$this->Group->read('groups', ['id' => $query->group_id])->is_active) {
+                                $msg = 'Tu grupo tiene su cuenta suspendida, por lo que no puedes iniciar sesión. Ponte en contacto con el administrador de sistema.';
+                                $this->middleware->response($msg, 'error');
+                            }
                         }
                         // Chequea si el usuario está activo.
                         if (!$query->is_active) {                            

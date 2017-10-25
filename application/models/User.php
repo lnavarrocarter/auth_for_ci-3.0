@@ -38,32 +38,33 @@ class User extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table = 'users', array $data = NULL, bool $array = false) {
+    public function read(string $table = 'users', array $data = NULL,array $join = NULL,string $select = NULL, bool $array = false) {
+        $query;
+        if($select){
+            $this->db->select($select);
+        }
+        if ($join){
+           foreach ($join as $jointable => $joinid) {
+                $this->db->join($jointable, $jointable.'.id = '.$table.'.'.$joinid); 
+            } 
+        }
         if (!$data) {
-            $this->db->select('users.*, groups.name as group_name');
-            $this->db->from($table);
-            $this->db->join('groups', 'groups.id = users.group_id');
-            $query = $this->db->get();
-            return $query->result();
+            $query = $this->db->get($table);
         } else {
-            $this->db->select('users.*, groups.name as group_name');
-            $this->db->from($table);
-            $this->db->join('groups', 'groups.id = users.group_id');
-            foreach ($data as $key => $val) {
-                $this->db->where($table.'.'.$key, $val);
-            }
-            $query = $this->db->get();
-            if ($query->num_rows() == 0 ) {
-                return false; 
-            } elseif ($query->num_rows() == 1 ) {
-                if ($array) {
-                    return $query->result();
-                } else {
-                    return $query->row();
-                }
-            } else {
+            $query = $this->db->get_where($table,$data);
+        }
+        if(!$query){
+            return false; 
+        } elseif ($query->num_rows() == 0) {
+            return false; 
+        } elseif ($query->num_rows() == 1 ) {
+            if ($array) {
                 return $query->result();
+            } else {
+                return $query->row();
             }
+        } else {
+            return $query->result();
         }
     }
 

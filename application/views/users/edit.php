@@ -14,7 +14,7 @@
         <input type="text" name="email" class="form-control" value="<?= $user->email ?>" placeholder="Correo electrónico" required>
     </div>
     <div class="form-group">
-        <select name="permissions[]" class="form-control selectpicker" multiple>
+        <select name="permissions" class="form-control selectpicker">
             <?php $perms = get_lower_permissions($this->session->userdata('permissions'))?>
             <?php $user_permissions = get_permissions($user->permissions);?>
             <?php foreach ($perms as $key => $val):?>
@@ -47,7 +47,7 @@
     <?php endif;?>
     <?php if (config_item('user_birthdate')):?>
     <div class="form-group">
-        <input type="date" name="birthdate" class="form-control" value="<?= $user->birthdate ?>" placeholder="Fecha de Nacimiento">
+        <input type="date" name="birthdate" class="form-control" value="<?= date("d-m-Y", $user->birthdate) ?>" placeholder="Fecha de Nacimiento">
     </div>
     <?php endif;?>
     <?php if (config_item('user_gender')):?>

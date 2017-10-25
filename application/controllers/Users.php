@@ -32,10 +32,10 @@ class Users extends CI_Controller {
         $data['title'] = 'Listado de Usuarios';
         $data['description'] = 'Aquí puedes ver una lista de todos los usuarios en el sistema.';
         if ($this->session->userdata('permissions') & PERM['sadmin']) {
-            $data['users'] = $this->User->read();
+            $data['users'] = $this->User->read('users',NULL,['groups' => 'group_id'],'users.*, groups.name as group_name',true);
         } elseif ($this->session->userdata('permissions') & PERM['admin']) {
             $id = $this->session->userdata('group_id');
-            $data['users'] = $this->User->read('users', ['group_id' => $id], true);
+            $data['users'] = $this->User->read('users', ['group_id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name', true);
         } else {
             redirect('users/show/'.$this->session->userdata('id'));
         }
@@ -48,15 +48,16 @@ class Users extends CI_Controller {
      * @return string or json
      */
     public function show($id) {
-        $query = $this->User->read('users', ['id' => $id]);
+        $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if (!$query) {
             $id = $this->session->userdata('id');
-            $data['user'] = $this->User->read('users', ['id' => $id]);
+            $data['user'] = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         } else {
           $data['user'] = $query;  
         }
         $data['title'] = 'Perfil de Usuario';
         $data['description'] = 'Aquí puedes ver el perfil de Usuario';
+        //$this->output->enable_profiler(TRUE);
         $this->middleware->renderview('users/show', $data);
     }
 
@@ -152,7 +153,7 @@ class Users extends CI_Controller {
     public function edit($id) {
         $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'], 'No tienes los permisos suficientes.');
-        $data['user'] = $this->User->read('users', ['id' => $id]);
+        $data['user'] = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if ($this->session->userdata('permissions') < $data['user']->permissions) {
             $this->middleware->response('No tienes permisos suficientes.', 'error');
         }
@@ -176,7 +177,7 @@ class Users extends CI_Controller {
         // Validaciones: AJAX, Permisos, Grupos y Formulario.
         $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
-        $query = $this->User->read('users', ['id' => $id]);
+        $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if ($this->session->userdata('permissions') < $query->permissions) {
             $this->middleware->response('No puedes editar un usuario de más privilegios que tú.', 'error');
         } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
@@ -251,7 +252,7 @@ class Users extends CI_Controller {
     public function destroy($id) {
         $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
-        $query = $this->User->read('users', ['id' => $id]);
+        $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if ($this->session->userdata('permissions') < $query->permissions) {
             $this->middleware->response('No puedes eliminar un usuario de más privilegios que tú.', 'error');
         } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
@@ -291,7 +292,7 @@ class Users extends CI_Controller {
         if ($this->session->userdata('id') == $id) {
             $this->middleware->response('No puedes bloquear tu propio usuario.', 'error');
         }
-        $query = $this->User->read('users', ['id' => $id]);
+        $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if ($this->session->userdata('permissions') < $query->permissions) {
             $this->middleware->response('No puedes bloquear un usuario de más privilegios que tú.', 'error');
         } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
@@ -314,7 +315,7 @@ class Users extends CI_Controller {
     public function unlock($id) {
         $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'],'No tienes los permisos suficientes para realizar esta acción.');
-        $query = $this->User->read('users', ['id' => $id]);
+        $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         if ($this->session->userdata('permissions') < $query->permissions) {
             $this->middleware->response('No puedes desbloquear un usuario de más privilegios que tú.', 'error');
         } elseif ($this->session->userdata('permissions') & PERM['admin'] && $this->session->userdata('group_id') < $query->group_id) {
@@ -344,7 +345,7 @@ class Users extends CI_Controller {
         // Genero un token
         $token = bin2hex(random_bytes(30));
         $query = $this->User->update('users', ['forgotten_password_code' => $token], ['id' => $id]);
-        $user = $this->User->read('users', ['id' => $id]);
+        $user = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
         // Si la query falla, alertamos al usuario.
         if(!$query) {
             $msg = 'Algo salió mal. Por favor, intenta nuevamente.';
@@ -385,7 +386,7 @@ class Users extends CI_Controller {
         $this->middleware->onlyajax();
         if ($this->input->server('REQUEST_METHOD') == 'GET') {
             // Cargar la vista
-            $data['user'] = $this->User->read('users', ['id' => $id]);
+            $data['user'] = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
             $data['title'] = 'Cambiar Contraseña';
             $data['description'] = 'Aquí puedes cambiar tu contraseña.';
             $this->middleware->renderview('users/passwd_change', $data);
@@ -400,7 +401,7 @@ class Users extends CI_Controller {
                 $this->form_validation->set_error_delimiters('', '');
                 $this->middleware->response(validation_errors(), 'error');
             }
-            $query = $this->User->read('users', ['id' => $id]);
+            $query = $this->User->read('users', ['users.id' => $id],['groups' => 'group_id'],'users.*, groups.name as group_name');
             if(!$query) {
                 $msg = 'Hubo un problema.';
                 $this->middleware->response($msg, 'error');

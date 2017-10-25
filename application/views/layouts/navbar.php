@@ -38,11 +38,11 @@
                         <?php endif;?>
                         <?php if ($this->session->userdata('permissions') & PERM['admin']):?>
                         <li><a href="<?= base_url('users')?>"><i class="fa fa-users fa-fw"></i> Administrar Usuarios</a></li>
-                        <li><a href="<?= base_url('groups/show/').$this->session->userdata('group_id');?>"><i class="fa fa-building fa-fw"></i> Administrar Grupo</a></li>
+                        <li><a href="<?= base_url('groups/show/').$this->session->userdata('group_id');?>"><i class="fa fa-building fa-fw"></i> Administrar Empresa</a></li>
                         <?php endif;?>
                         <?php if ($this->session->userdata('permissions') & PERM['sadmin']):?>
                         <li><a href="<?= base_url('users')?>"><i class="fa fa-users fa-fw"></i> Administrar Usuarios</a></li>
-                        <li><a href="<?= base_url('groups')?>"><i class="fa fa-building fa-fw"></i> Administrar Grupos</a></li>
+                        <li><a href="<?= base_url('groups')?>"><i class="fa fa-building fa-fw"></i> Administrar Empresas</a></li>
                         <?php endif;?>
                         <li role="separator" class="divider"></li>
                         <li class="dropdown-header">Mi Cuenta</li>
