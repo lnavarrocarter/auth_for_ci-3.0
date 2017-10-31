@@ -1,7 +1,8 @@
-# Ncai Auth for CI
+# Auth for CI
 Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, flexible y totalmente personalizable.
 
-> NOTA: Ncai Auth se encuentra en fase Alpha. No deberías utilizarlo en producción hasta que no salga la primera versión oficial.
+> NOTA: Auth se encuentra en fase Beta. No deberías utilizarlo en producción hasta que no salga la primera versión oficial.
+> IMPORTANTE: AUTH es un proyecto original de @mnavarro yo solo he realizado mejoras en los controladores e integraciones con distintos plugins quise tomar el proyecto solo para mejorar sus funciones.
 
 ## Caracterísiticas
 
@@ -38,9 +39,9 @@ Un sistema de autenticación autoinstalable para Codeigniter; rápido, seguro, f
 4. Una instalación fresca de Codeigniter 3.0.0 o superior
 
 ## Instalación y Configuración
-Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
+Es muy fácil instalar y configurar Auth. Simplemente sigue estos pasos:
 
-1. Descarga la [última versión](https://github.com/mnavarrocarter/ncai_auth_for_ci/releases/latest)
+1. Descarga la [última versión]
 
 2. Extrae el contenido en el directorio raíz de tu Codeigniter
 
@@ -58,22 +59,22 @@ Es muy fácil instalar y configurar Ncai Auth. Simplemente sigue estos pasos:
 
 9. Ve a tu navegador, accede a tu instancia de Codeigniter y disfruta la magia!
 
-> NOTA: Ten en cuenta que Ncai Auth sobreescribirá la configuración que tengas en tus archivos de autoload.php, database.php, constants.php, email.php y migration.php. Es recomendable siempre instalarlo en una instancia fresca de Codeigniter. Si lo estás instalando en una instancia que ya posee configuraciones definidas en esos archivos, asegúrate de guardarlas o reconfigurarlas.
+> NOTA: Ten en cuenta que Auth sobreescribirá la configuración que tengas en tus archivos de autoload.php, database.php, constants.php, email.php y migration.php. Es recomendable siempre instalarlo en una instancia fresca de Codeigniter. Si lo estás instalando en una instancia que ya posee configuraciones definidas en esos archivos, asegúrate de guardarlas o reconfigurarlas.
 
 ## Roadmap
 
-| Version | Nombre    | Funcionalidades Planeadas                                      |
-| ------- | --------- | -------------------------------------------------------------- |
-| 2.0     | Bespin    | Integrar AdminLTE, log, registrar intento CSRF. Auth confirm.  |
-| 3.0     | Coruscant | Añadir plan, tipos de plan, campo perfil, controlador usuario. |
-| 4.0     | Dagobah   | Cron Jobs, respuestas AJAX.                                    |
+| Version | Nombre    | Funcionalidades Planeadas                                      | Developer  |
+| ------- | --------- | -------------------------------------------------------------- |------------|
+| 2.0     | Bespin    | Integrar AdminLTE, log, registrar intento CSRF. Auth confirm.  |Luis Navarro|
+| 3.0     | Coruscant | Añadir plan, tipos de plan, campo perfil, controlador usuario. |Luis Navarro| 
+| 4.0     | Dagobah   | Cron Jobs, respuestas AJAX.                                    |Luis Navarro|
 
 ## Específicos
 
 ### Sobre el Sistema de Permisos
-Ncai Auth utiliza una de las mejores prácticas para manejar permisos de usuarios de forma programática. Mientras que IonAuth utiliza una tabla aparte para grupos donde se guardan a los grupos administrativos a los que pertenece el usuario, nosotros definimos los grupos de manera programática.
+Auth utiliza una de las mejores prácticas para manejar permisos de usuarios de forma programática. Mientras que IonAuth utiliza una tabla aparte para grupos donde se guardan a los grupos administrativos a los que pertenece el usuario, nosotros definimos los grupos de manera programática.
 
-Para empezar, es tan flexible que no se puede encapsular sólo en grupos de usuarios, sino más bien en permisos. Al final de nuestro constants.php definimos con qué permisos queremos trabajar en nuestro software, asignándoles valores enteros en potencia de dos a cada uno de los que queramos definir. Por defecto, Ncai Auth trae tres "grupos".
+Para empezar, es tan flexible que no se puede encapsular sólo en grupos de usuarios, sino más bien en permisos. Al final de nuestro constants.php definimos con qué permisos queremos trabajar en nuestro software, asignándoles valores enteros en potencia de dos a cada uno de los que queramos definir. Por defecto, Auth trae tres "grupos".
 
 ```
 defined('USER')     OR define('USER', 1);       // User
@@ -98,8 +99,3 @@ $this->db->update('users', ['permissions' => USER], ['id' => $id]);
 $this->middleware->only_permission(ADMIN, 'app');
 ```
 Lo que hace la útima función es permitir el acceso sólo a los que pertenecen al grupo de admins. Al resto, los va a redirigir a controlador app. Esto sirve para validar el acceso a un controlador. Sin embargo, pueden establecerse y validarse múltiples permisos tan sólo separandolos con el operador |.
-
-## Contribuir
-1. Puedes [reportar un bug o sugerir una mejora](https://github.com/mnavarrocarter/ncai_auth_for_ci/issues).
-
-2. Puedes [realizar pull requests](https://github.com/mnavarrocarter/ncai_auth_for_ci/pulls) con mejoras y nuevas funcionalidades que desees incluir en la plataforma.
