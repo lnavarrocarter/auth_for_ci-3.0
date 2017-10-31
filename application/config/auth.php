@@ -59,9 +59,9 @@ $config['password_reset'] = true;           // Activa la opción de recuperar cl
 |
 |
 */
-$config['app_name'] = 'Ncai Auth System for CI';
+$config['app_name'] = 'Auth System for CI';
 $config['app_motto'] = 'Te ahorramos el trabajo pesado.';
-$config['company_address'] = 'Huérfanos 1055, Oficina 503. Santiago, Chile.';
+$config['company_address'] = '';
 $config['app_url'] = '';
 $config['email_body_background_color'] = '#FFFFFF';
 $config['email_body_font_color'] = '#4E4E4E';
@@ -87,7 +87,7 @@ $config['email_activation_paragraphs'] = [
     'p1' => 'Estimado Usuario:',
     'p2' => '¡Gracias por registrarte con nosotros! Por favor, activa tu cuenta presionando el enlace más abajo.',
     'p3' => 'Muchas gracias por preferirnos,',
-    'p4' => 'Ncai SpA'
+    'p4' => 'Auth CI'
 ];
 $config['email_activation_button_text'] = 'Activar Cuenta';
 
