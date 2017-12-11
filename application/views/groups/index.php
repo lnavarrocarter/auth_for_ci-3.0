@@ -18,9 +18,6 @@
                     <tr>
                         <th class="text-center text-middle">#</th>
                         <th class="text-center text-middle">Nombre</th>
-                        <th class="text-center text-middle">Email</th>
-                        <th class="hidden-xs text-center text-middle">Miembros</th>
-                        <th class="hidden-xs text-center text-middle">Token</th>
                         <th class="hidden-xs text-center text-middle">Creado</th>
                         <th class="text-center text-middle">
                             <button class="btn btn-xs btn-success" onclick="openModal('groups/new', 'Nuevo Grupo')" data-toggle="tooltip" title="Nuevo" data-placement="top"><i class="fa fa-fw fa-plus"></i></button>
@@ -39,15 +36,6 @@
                             </th>
                             <th class="text-middle">
                                 <?= $group->name ?>
-                            </th>
-                            <th class="text-middle">
-                                <?= $group->email ?>
-                            </th>
-                            <th class="text-middle hidden-xs">
-                                <?= $group->max_members ?>
-                            </th>
-                            <th class="hidden-xs text-center text-middle">
-                                <?= $group->token ?>
                             </th>
                             <th class="hidden-xs text-center text-middle">
                                 <?= strftime('%d/%m/%y', $group->created_at) ?>

@@ -2,7 +2,7 @@
 
 /*
 |--------------------------------------------------------------------------
-| Ncai Auth Middlewares
+| Auth CI Middlewares
 |--------------------------------------------------------------------------
 | En esta básica librería puedes configurar algunas funciones para que
 | actúen como middlewares ente tu request y el controlador. Esto no es
@@ -15,8 +15,8 @@
 | o visitas. El tercero es para permitir el acceso sólo a los que tienen
 | los permisos indicados.
 |
-| Autor: Matías Navarro Carter
-| Email: mnavarrocarter@gmail.com
+| Autor: Luis Navarro Carter
+| Email: lnavarro.carter@gmail.com
 | Licencia: MIT
 |
 |
@@ -166,7 +166,7 @@ class Middleware {
      * @param array $type 
      * @return json
      */
-    public function response(string $msg, string $type, string $redirect = NULL) {
+    public function response(string $msg, string $type, string $redirect = NULL, $refresh = false) {
         if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
             if ($redirect == 'referer') {
                 $this->CI->session->set_flashdata('msg', $msg);
@@ -177,6 +177,9 @@ class Middleware {
                $response['msg'] = $msg;
                if ($redirect) {
                    $response['redirect'] = $redirect;
+               }
+               if ($redirect) {
+                   $response['refresh'] = $refresh;
                }
                echo json_encode($response);
                die; 

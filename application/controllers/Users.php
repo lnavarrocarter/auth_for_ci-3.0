@@ -65,7 +65,7 @@ class Users extends CI_Controller {
      * Devuelve html con formulario para crear nuevo usuario
      * @return string or json
      */
-    public function new() {
+    public function add() {
         $this->middleware->onlyajax();
         $this->middleware->only_permission(PERM['sadmin']|PERM['admin'], 'No tienes los permisos suficientes.');
         $data['title'] = 'Nuevo Usuario';

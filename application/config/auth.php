@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | -------------------------------------------------------------------
 | Este arhivo contiene la configuración Ncai Auth for CI.
 |
-| Autor: Matías Navarro Carter
+| Autor: Matías Navarro Carter & Luis Navarro Carter
 | Licencia: MIT
 |
 |
@@ -37,7 +37,7 @@ $config['register_with_username'] = false;  // Pedir un nombre de usuario en el 
 $config['register_with_terms'] = true;      // Pedir aceptar los términos de servicio en el registro
 $config['activation_email'] = true;        // Envía un email de confirmación para el registro.
 $config['default_permissions'] = PERM['user'];// Puedes elegir entre USER, ADMIN o SADMIN. Puedes fijar tus propias en constants.php
-$config['send_welcome_email'] = true;      // Depende de activation email.
+$config['send_welcome_email'] = false;      // Depende de activation email.
 
 // Opciones de Seguridad
 $config['use_salt'] = true;                 // Encriptar las contraseñas con un salt aleatoreo.
@@ -61,7 +61,7 @@ $config['password_reset'] = true;           // Activa la opción de recuperar cl
 */
 $config['app_name'] = 'Auth System for CI';
 $config['app_motto'] = 'Te ahorramos el trabajo pesado.';
-$config['company_address'] = '';
+$config['company_address'] = 'Santiago, Chile.';
 $config['app_url'] = '';
 $config['email_body_background_color'] = '#FFFFFF';
 $config['email_body_font_color'] = '#4E4E4E';

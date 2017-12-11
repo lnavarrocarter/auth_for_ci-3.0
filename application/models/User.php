@@ -30,7 +30,7 @@ class User extends CI_Model {
     ##############################
 
     // Crea una entrada en la base de datos
-    public function create(string $table = 'users', array $data) {
+    public function create($table = 'users', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
         $query = $this->db->insert($table, $data);
@@ -38,7 +38,7 @@ class User extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table = 'users', array $data = NULL,array $join = NULL,string $select = NULL, bool $array = false) {
+    public function read($table = 'users', array $data = NULL,array $join = NULL,$select = NULL,$array = false) {
         $query;
         if($select){
             $this->db->select($select);
@@ -69,14 +69,21 @@ class User extends CI_Model {
     }
 
     // Actualiza una entrada en la base de datos
-    public function update(string $table = 'users', array $data, array $where) {
+    public function update($table = 'users', array $data, array $where) {
         $data['edited_at'] = time();
         $query = $this->db->update($table, $data, $where);
         return $query;
     }
 
+    public function delete($table, array $where){
+        $data['deleted_at'] = time();
+        $data['is_deleted'] = 1;
+        $query = $this->db->update($table, $data, $where);
+        return $query;
+    }
+
     // Elimina una entrada en la base de datos
-    public function delete($table = 'users', array $where) {     
+    public function destroy($table = '', array $where) {     
         $query = $this->db->delete($table, $where);
         return $query;
     }

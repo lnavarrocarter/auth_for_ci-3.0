@@ -57,7 +57,8 @@ class Auth extends CI_Controller {
         // Autoinstalar la base de
         if ($this->config->item('auto_install_db') && !$this->db->table_exists('users')) {
             $this->load->library("migration");
-            $this->migration->version(1);
+            $this->migration->version(3);
+            $this->seeders->init_db();
         }
     }
 
@@ -153,7 +154,7 @@ class Auth extends CI_Controller {
                 // Si el formulario es válido, se inicia el proceso de inicio de sesión
                 } else {
                     // Se consulta a la base de datos por el usuario
-                    $query = $this->User->read('users', $data);
+                    $query = $this->User->read('Tratantes', $data);
                     // Si no existe el usuario, se devuelve error
                     if(!$query) {
                         $msg = 'Nombre de usuario o correo electrónico incorrecto.';

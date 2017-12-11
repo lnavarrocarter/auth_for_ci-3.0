@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-class Group extends CI_Model {
+class Defauld_model extends CI_Model {
 
     ##########################
     # CONSTRUCTOR DEL MODELO #
@@ -30,7 +30,7 @@ class Group extends CI_Model {
     ##############################
 
     // Crea una entrada en la base de datos
-    public function create(string $table = 'groups', array $data) {
+    public function create($table = '', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
         $query = $this->db->insert($table, $data);
@@ -38,28 +38,38 @@ class Group extends CI_Model {
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read(string $table = 'groups', array $data = NULL, bool $array = FALSE) {
+    public function read($table = '', array $data = NULL,array $join = NULL,$select = NULL,$array = false) {
+        $query;
+        if($select){
+            $this->db->select($select);
+        }
+        if ($join){
+           foreach ($join as $jointable => $joinid) {
+                $this->db->join($jointable, $jointable.'.id = '.$table.'.'.$joinid); 
+            } 
+        }
         if (!$data) {
             $query = $this->db->get($table);
-            return $query->result();
         } else {
-            $query = $this->db->get_where($table, $data);
-            if ($query->num_rows() == 0 ) {
-                return false;
-            } elseif ($query->num_rows() == 1 ) {
-                if ($array) {
-                    return $query->result();
-                } else {
-                    return $query->row();
-                }
-            } else {
+            $query = $this->db->get_where($table,$data);
+        }
+        if(!$query){
+            return false; 
+        } elseif ($query->num_rows() == 0) {
+            return false; 
+        } elseif ($query->num_rows() == 1 ) {
+            if ($array) {
                 return $query->result();
+            } else {
+                return $query->row();
             }
+        } else {
+            return $query->result();
         }
     }
 
     // Actualiza una entrada en la base de datos
-    public function update(string $table = 'groups', array $data, array $where) {
+    public function update($table = '', array $data, array $where) {
         $data['edited_at'] = time();
         $query = $this->db->update($table, $data, $where);
         return $query;

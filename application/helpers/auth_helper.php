@@ -39,3 +39,26 @@ function get_gender($number) {
         echo 'No definido';
     }
 }
+
+function get_status($number){
+    switch ($number) {
+        case '1':
+            return 'Habilitado';
+            break;
+        case '2':
+            return 'Deshabilitado';
+            break;
+        case '3':
+            return 'Suspendido';
+            break;
+        case '4':
+            return 'Eliminado';
+            break;
+        case '5':
+            return 'Destruido';
+            break;
+        default:
+            return 'error';
+            break;
+    }
+}

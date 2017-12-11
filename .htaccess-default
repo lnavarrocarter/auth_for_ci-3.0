@@ -4,6 +4,12 @@ SetEnv SMTPUSER tu-usuario
 SetEnv SMTPPASS tu-contraseña
 SetEnv SMTPHOST tu-smtp-server
 SetEnv SMTPPORT tu-puerto
+
+## Credenciales DB
+SetEnv DBUSER tu-usuario
+SetEnv DBPASS tu-contraseña
+SetEnv DBHOST tu-host-mysql
+SetEnv DBSCHECMA tu-schecma
 </IfModule>
 
 # Asegurarse que va a index.php
