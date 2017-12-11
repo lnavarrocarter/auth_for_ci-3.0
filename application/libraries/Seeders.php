@@ -14,7 +14,7 @@ class Seeders{
 
     function init_db(){
         $this->create_enterprise_admin();
-        $this->create_group_sadmin()
+        $this->create_group_sadmin();
         $this->create_group_admin();
         $this->create_group_user();
         $this->create_user_admin();
@@ -55,7 +55,7 @@ class Seeders{
         $data['max_members'] = '100';
         $data['token'] = sha1($data['email'].$data['dni']);
         $data['logo_url'] = 'assets/img/logos/authfox.png';
-        $data['is_active'] = 1
+        $data['is_active'] = 1;
         $data['is_deleted'] = 0;
         $data['created_at'] = time();
     }
