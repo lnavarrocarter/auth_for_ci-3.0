@@ -29,7 +29,7 @@ $config['user_phone'] = true;               //
 // Opciones de Inicio de Sesión
 $config['smart_redirect'] = true;           // Activa redireccionamiento inteligente. Ver Wiki para configurar.
 $config['logged_in_controller'] = 'users';  // El controlador donde el sistema de login redirecciona
-
+$config['user_admin'] = 'admin@auth.cl';
 // Opciones de Registro
 $config['activate_registration'] = true;    // Activar el registro de usuarios
 $config['register_with_name'] = true;      // Pedir el nombre en el registro

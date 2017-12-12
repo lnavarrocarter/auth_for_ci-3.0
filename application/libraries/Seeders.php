@@ -46,13 +46,13 @@ class Seeders{
 
     private function create_enterprise_admin(){
         $data['name'] = 'AUTHFOX';
-        $data['fakername'] = 'AUTHFOX NCAI';
+        $data['fakename'] = 'AUTHFOX';
         $data['giro'] = 'Programins For Love';
         $data['email'] = 'info@auth.cl';
-        $data['dni'] = '99666333';
-        $data['dv'] = '7';
+        $data['dni'] = 99666333;
+        $data['dv'] = 7;
         $data['description'] = 'The AUTHFOX is a wonderfull enterprise.';
-        $data['max_members'] = '100';
+        $data['max_members'] = 100;
         $data['token'] = sha1($data['email'].$data['dni']);
         $data['logo_url'] = 'assets/img/logos/authfox.png';
         $data['is_active'] = 1;
@@ -65,12 +65,12 @@ class Seeders{
         $data['username'] = 'admin';
         $data['email'] = $this->CI->config->item('user_admin');
         $data['name1'] = 'Administrador';
-        $data['lastname1'] = 'Auth';
-        $data['mobile'] = '+56973394675';
+        $data['lastname1'] = 'AuthCI';
         $data['salt'] = uniqid(mt_rand(), true);
         $data['password'] = password_hash($data['salt'].'12345678',PASSWORD_BCRYPT);
         $data['is_active'] = 1;
         $data['is_locked'] = 0;
+        $data['is_deleted'] = 0;
         $data['group_id'] = 1;
         $data['enterprise_id'] = 1;
         $data['permissions'] = 7;

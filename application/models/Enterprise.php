@@ -7,7 +7,7 @@ class Enterprise extends CI_Model{
     ##############################
 
     // Crea una entrada en la base de datos
-    public function create($table = '', array $data) {
+    public function create($table = 'enterprise', array $data) {
         $data['created_at'] = time();
         $data['edited_at'] = time();
         $query = $this->db->insert($table, $data);
@@ -15,7 +15,7 @@ class Enterprise extends CI_Model{
     }
 
     // Obtiene una o varias entradas desde la base de datos
-    public function read($table = '', array $data = NULL,array $join = NULL,$select = NULL,$array = false) {
+    public function read($table = 'enterprise', array $data = NULL,array $join = NULL,$select = NULL,$array = false) {
         $query;
         if($select){
             $this->db->select($select);
@@ -46,13 +46,13 @@ class Enterprise extends CI_Model{
     }
 
     // Actualiza una entrada en la base de datos
-    public function update($table = '', array $data, array $where) {
+    public function update($table = 'enterprise', array $data, array $where) {
         $data['edited_at'] = time();
         $query = $this->db->update($table, $data, $where);
         return $query;
     }
 
-    public function delete($table, array $where){
+    public function delete($table = 'enterprise', array $where){
         $data['deleted_at'] = time();
         $data['is_deleted'] = 1;
         $query = $this->db->update($table, $data, $where);
@@ -60,7 +60,7 @@ class Enterprise extends CI_Model{
     }
 
     // Elimina una entrada en la base de datos
-    public function destroy($table = '', array $where) {     
+    public function destroy($table = 'enterprise', array $where) {     
         $query = $this->db->delete($table, $where);
         return $query;
     }
