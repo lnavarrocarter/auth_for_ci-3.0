@@ -47,7 +47,7 @@ class Seeders{
     private function create_enterprise_admin(){
         $data['name'] = 'AUTHFOX';
         $data['fakername'] = 'AUTHFOX NCAI';
-        $data['giro'] = 'Programin';
+        $data['giro'] = 'Programins For Love';
         $data['email'] = 'info@auth.cl';
         $data['dni'] = '99666333';
         $data['dv'] = '7';
@@ -58,6 +58,7 @@ class Seeders{
         $data['is_active'] = 1;
         $data['is_deleted'] = 0;
         $data['created_at'] = time();
+        $this->CI->Enterprise->create('enterprise',$data);
     }
 
     private function create_user_admin(){
@@ -74,7 +75,7 @@ class Seeders{
         $data['enterprise_id'] = 1;
         $data['permissions'] = 7;
         $data['created_at'] = time();
-        $query = $this->CI->User->create('users',$data);
+        $this->CI->User->create('users',$data);
     }
 
 }

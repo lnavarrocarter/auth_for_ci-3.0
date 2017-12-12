@@ -75,7 +75,7 @@ class User extends CI_Model {
         return $query;
     }
 
-    public function delete($table, array $where){
+    public function delete($table = 'users', array $where){
         $data['deleted_at'] = time();
         $data['is_deleted'] = 1;
         $query = $this->db->update($table, $data, $where);
@@ -83,7 +83,7 @@ class User extends CI_Model {
     }
 
     // Elimina una entrada en la base de datos
-    public function destroy($table = '', array $where) {     
+    public function destroy($table = 'users', array $where){     
         $query = $this->db->delete($table, $where);
         return $query;
     }
