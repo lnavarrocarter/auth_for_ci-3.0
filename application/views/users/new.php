@@ -14,7 +14,7 @@
         <input type="text" name="email" class="form-control" value="<?= $this->session->flashdata('email')?>" placeholder="Correo electrónico" required>
     </div>
     <div class="form-group">
-        <select name="permissions[]" class="form-control selectpicker" multiple>
+        <select name="permissions" class="form-control selectpicker">
             <?php $perms = get_lower_permissions($this->session->userdata('permissions'))?>
             <?php foreach ($perms as $key => $val):?>
                 <option value="<?= $key ?>"><?= $val ?></option>
@@ -23,7 +23,7 @@
     </div>
     <?php if (is_array($groups)): ?>
     <div class="form-group">
-        <select name="group_id" class="form-control">
+        <select name="group_id" class="form-control selectpicker">
             <option value="" disabled selected>Elige un Grupo</option>
             <?php foreach ($groups as $group): ?>
             <option value="<?= $group->id ?>"><?= $group->name?></option>

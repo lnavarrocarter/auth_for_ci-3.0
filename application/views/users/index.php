@@ -21,7 +21,7 @@
                         <th class="hidden-xs text-center text-middle">Creado</th>
                         <th class="hidden-xs text-center text-middle">Activo</th>
                         <th class="text-center text-middle">
-                            <button class="btn btn-xs btn-success" onclick="openModal('users/new', 'Nuevo Usuario')" data-toggle="tooltip" title="Nuevo" data-placement="top"><i class="fa fa-fw fa-plus"></i></button>
+                            <button class="btn btn-xs btn-success" onclick="openModal('users/add', 'Nuevo Usuario')" data-toggle="tooltip" title="Nuevo" data-placement="top"><i class="fa fa-fw fa-plus"></i></button>
                         </th>
                     </tr>
                 </thead>

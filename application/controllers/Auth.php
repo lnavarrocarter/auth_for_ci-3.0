@@ -154,7 +154,7 @@ class Auth extends CI_Controller {
                 // Si el formulario es válido, se inicia el proceso de inicio de sesión
                 } else {
                     // Se consulta a la base de datos por el usuario
-                    $query = $this->User->read('Tratantes', $data);
+                    $query = $this->User->read('users', $data);
                     // Si no existe el usuario, se devuelve error
                     if(!$query) {
                         $msg = 'Nombre de usuario o correo electrónico incorrecto.';
@@ -229,6 +229,7 @@ class Auth extends CI_Controller {
                                 'email'                 => $query->email,
                                 'permissions'           => $query->permissions,
                                 'group_id'              => $query->group_id,
+                                'enterprise_id'         => $query->enterprise_id,
                                 'lastlogin_ip'          => $query->lastlogin_ip,
                                 'lastlogin_time'        => $query->lastlogin_time,
                                 'avatar'                => $query->avatar_url,

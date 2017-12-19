@@ -88,7 +88,7 @@
                 <label id="btnUpload" data-toggle="tooltip" data-original-title="Cambiar avatar" class="btn btn-primary btn-sm btn-file">
                     <i class="fa fa-photo fa-fw"></i><input id="upload" type="file" style="display: none;">
                 </label>
-                <button style="display: none;" id="btnSave" data-toggle="tooltip" data-original-title="Guardar" data-id="<?= $user->id ?>" class="btn btn-success btn-sm"><i class="fa fa-save fa-fw"></i></button>
+                <button style="display: none;" id="btnSave" data-toggle="tooltip" data-original-title="Guardar" data-id="<?= $user->id ?>" data-controller="users/change_profile_img/" class="btn btn-success btn-sm"><i class="fa fa-save fa-fw"></i></button>
                 <button style="display: none;" id="btnCancel" data-toggle="tooltip" data-original-title="Cancelar" class="btn btn-danger btn-sm"><i class="fa fa-ban fa-fw"></i></button>
                 <span class="pull-right">
                     <button onclick="openModal('users/edit/<?=$user->id?>?id=usersShow', 'Editar Usuario')" class="btn btn-sm btn-primary edit" data-toggle="tooltip" title="Editar" data-placement="top"><i class="fa fa-fw fa-pencil"></i></button>

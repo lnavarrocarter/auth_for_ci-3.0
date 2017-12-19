@@ -187,12 +187,13 @@ $('body').on('click', '#btnCancel', function () {
 
 $('#btnSave').on('click', function (ev) {
     var id = $(this).data('id');
+    var controller = $(this).data('controller');
     $uploadCrop.croppie('result', {
         type: 'canvas',
         size: 'viewport'
     }).then(function (resp) {
         $.ajax({
-            url: baseUrl+'users/change_profile_img/'+id,
+            url: baseUrl+controller+id,
             type: "POST",
             data: {"image":resp},
             success: function (data) {

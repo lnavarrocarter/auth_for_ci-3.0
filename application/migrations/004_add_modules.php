@@ -2,12 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Add_Enterprise extends CI_Migration {
+class Migration_Add_Plans extends CI_Migration {
 
     public function up() {
-        /**
-         * Tabla de Enterprise
-         */
         $this->dbforge->add_field(array(
                 'id' => array(
                         'type' => 'INT',
@@ -20,54 +17,21 @@ class Migration_Add_Enterprise extends CI_Migration {
                         'constraint' => '30',
                         'null' => TRUE,
                 ),
-                'fakename' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '100',
-                        'null' => TRUE,
-                ),
-                'giro' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '100',
-                        'null' => TRUE,
-                ),
-                'email' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '60',
-                        'null' => TRUE,
-                ),
-                'dni' => array(
-                        'type' => 'INT',
-                        'constraint' => 10,
-                        'null' => TRUE,
-                ),
-                'dv' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => 1,
-                        'null' => TRUE,
-                ),
-                'description' => array(
+                'descripcion' => array(
                         'type' => 'LONGTEXT',
-                        'null' => TRUE,
+                        'null' => TRUE
                 ),
-                'max_members' => array(
+                'cost' => array(
                         'type' => 'INT',
-                        'constraint' => 11,
-                        'null' => TRUE,
+                        'constraint' => '20',
+                        'unsigned' => TRUE,
+                        'null' => TRUE
                 ),
-                'token' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '50',
-                        'null' => TRUE,
-                ),
-                'logo_url' => array(
-                        'type' => 'VARCHAR',
-                        'constraint' => '200',
-                        'null' => TRUE,
-                ),
-                'plan_id' => array(
+                'duration' => array(
                         'type' => 'INT',
-                        'constraint' => 11,
-                        'null' => TRUE,
+                        'constraint' => '2',
+                        'unsigned' => TRUE,
+                        'null' => TRUE
                 ),
                 'is_active' => array(
                         'type' => 'TINYINT',
@@ -102,10 +66,10 @@ class Migration_Add_Enterprise extends CI_Migration {
         ));
         $this->dbforge->add_key('id', TRUE);
         $this->dbforge->add_key('token');
-        $this->dbforge->create_table('enterprises');
+        $this->dbforge->create_table('plans');
     }
 
     public function down() {
-        $this->dbforge->drop_table('enterprises');
+
     }
 }
